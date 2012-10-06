@@ -1,23 +1,31 @@
 <?php
+
+	include("Database.php");
 class UserAccess {
 	//singleton because we will only have one instance of this class per login.
 	//Programmer will be able to access this without passing of an object
-	$private static $_username;
-	$private static $_passhash;
+	private $_username;
+	private $_passhash;
 	
-	public static function login($username, $password) {
-		$_username = $username;
-		$_passhash = hash('sha512', $password);
-		
-		$sql = "SELECT PASSCODE
-				FROM USERS
-				WHERE USERNAME = '$_username'";
-				
-		$result = mysql_query($sql) or die(mysql_error());
-		$row = mysql_fetch_array($result);
-		$dbpasshash = $row['PASSCODE'];
-		
-		if($_passhash == $dbpasshash) {
+	public function __construct(){
+	}
+	
+	public function setUsername($username) {
+		$this->_username = $username;
+	}
+	
+	public function setPassword($password) {
+		$this->_passhash = hash('sha512', $password);
+	}
+	
+	public function login($username, $password) {
+		$this->setUsername($username);
+		$this->setPassword($password);
+
+		$db = new Database();
+		$dbpasshash = $db->getUserPassHash($this->_username);
+
+		if($this->_passhash == $dbpasshash) {
 			return True;
 		}
 		else {
