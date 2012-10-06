@@ -13,6 +13,11 @@ class UserAccess {
 		$this->_username = $username;
 	}
 	
+	public function getUsername() {
+		session_start();
+		return $_SESSION['SESS_MEMBER_ID'];
+	}
+	
 	public function setPassword($password) {
 		$this->_passhash = hash('sha512', $password);
 	}
