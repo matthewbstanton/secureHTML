@@ -1,8 +1,20 @@
 <?php
-	include("Config.php");
+	include("Classes/UserAccess.php");
 	session_start();
 	if($_SERVER["REQUEST_METHOD"] == "POST") {
-		$link = mysql_connect($mysql_hostname, $mysql_user, $mysql_password);
+		$useraccess = new UserAccess();
+		$login = $useraccess->login("ADMIN", "password");
+		
+		if ($login == False) {
+			print("login failed");
+		}
+		else {
+			print("login success");
+		}
+		
+		//UserAccess::setUsername("ADMIN");
+		//$login = UserAccess::login();
+		/*$link = mysql_connect($mysql_hostname, $mysql_user, $mysql_password);
 		if (!$link) {
 			die('Not Connected : ' . mysql_error());
 		}
@@ -28,7 +40,7 @@
 		}
 		else {
 			print("Bad Password");
-		}
+		}*/
 		
 		//header("location: Welcome.php");
 	}
