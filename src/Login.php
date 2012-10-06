@@ -11,10 +11,6 @@
 			print("login failed");
 		}
 		else {
-			session_regenerate_id();
-			
-			$_SESSION['SESS_MEMBER_ID'] = $username;
-			
 			header("location: Welcome.php");
 		}
 	}

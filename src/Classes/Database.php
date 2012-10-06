@@ -2,8 +2,14 @@
 include("Config.php");
 class Database {
 	
-	public function getUserPassHash($username) {
-		$config = new Config();
+	private $_config;
+	
+	public function __construct() {
+		$this->_config = new Config();
+	}
+	
+	private function connect() {
+		$config = $this->_config;
 		$link = mysql_connect($config->getHostname(), $config->getUser(), $config->getPassword());
 		if (!$link) {
 			die('Not Connected : ' . mysql_error());
@@ -13,6 +19,13 @@ class Database {
 		if (!$db_selected) {
 		    die ('Can\'t use db : ' . mysql_error());
 		}
+		
+		return $db_selected;
+	}
+	
+	public function getUserPassHash($username) {
+		
+		$this->connect();
 
 		$sql = "SELECT PASSCODE
 				FROM USERS
