@@ -1,5 +1,6 @@
 <?php
 	include("Classes/UserAccess.php");
+	$config = new Config();
 	session_start();
 	if($_SERVER["REQUEST_METHOD"] == "POST") {
 		$username = $_POST['username'];
@@ -11,7 +12,7 @@
 			print("login failed");
 		}
 		else {
-			header("location: Welcome.php");
+			header("location: " . $config->getWelcomePage());
 		}
 	}
 ?>

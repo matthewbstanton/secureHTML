@@ -1,5 +1,6 @@
 <?php
 include("Database.php");
+
 class UserAccess {
 	private $_username;
 	private $_passhash;
@@ -7,6 +8,7 @@ class UserAccess {
 	
 	public function __construct(){
 		$this->_db = new Database();
+		$this->_config = new Config();
 	}
 	
 	public function setUsername($username) {
@@ -18,6 +20,19 @@ class UserAccess {
 		return $_SESSION['SESS_MEMBER_ID'];
 	}
 	
+	public function isLoggedIn() {
+		session_start();
+		if (!isset($_SESSION['SESS_MEMBER_ID']) || $_SESSION['SESS_MEMBER_ID'] == '')
+			return False;
+		else
+			return True;
+	}
+	
+	public function sessionValidation() {
+		if (!$this->isLoggedIn())
+			header("location: " . $this->_config->getLoginPage());
+	}
+	
 	public function setPassword($password) {
 		$this->_passhash = hash('sha512', $password);
 	}
@@ -26,6 +41,11 @@ class UserAccess {
 		session_regenerate_id();
 		$_SESSION['SESS_MEMBER_ID'] = $this->_username;
 		session_write_close();
+	}
+	
+	public function logout() {
+		session_start(); 
+		session_destroy();
 	}
 	
 	public function login($username, $password) {
