@@ -1,5 +1,4 @@
 <?php
-include("Config.php");
 class Database {
 	
 	private $_config;

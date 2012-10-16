@@ -1,5 +1,8 @@
 <?php
-include("Database.php");
+
+function __autoload($class_name) {
+   	include ('Classes/'.$class_name . '.php');
+}
 
 class UserAccess {
 	private $_username;
@@ -9,6 +12,7 @@ class UserAccess {
 	public function __construct(){
 		$this->_db = new Database();
 		$this->_config = new Config();
+		$this->_security = new Security();
 	}
 	
 	public function setUsername($username) {
@@ -34,7 +38,7 @@ class UserAccess {
 	}
 	
 	public function setPassword($password) {
-		$this->_passhash = hash('sha512', $password);
+		$this->_passhash = $this->_security->hash($password);
 	}
 	
 	private function registerSession() {
