@@ -7,6 +7,9 @@
 		private $_loginPage = "login.php";
 		private $_logoutPage = "logout.php";
 		private $_welcomePage = "welcome.php";
+		private $_hashAlgorithm = "sha512";
+		#Must be 56-bit long key
+		private $_securityKey = "abcdefgh01234567";
 		
 		public function __construct(){
 		}
@@ -37,6 +40,14 @@
 		
 		public function getDBName() {
 			return $this->_mysql_database;
+		}
+		
+		public function getHashAlgorithm() {
+			return $this->_hashAlgorithm;
+		}
+		
+		public function getSecurityKey() {
+			return $this->_securityKey;
 		}
 	}
 ?>

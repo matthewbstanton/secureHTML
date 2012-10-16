@@ -1,9 +1,5 @@
 <?php
 
-function __autoload($class_name) {
-   	include ('Classes/'.$class_name . '.php');
-}
-
 class UserAccess {
 	private $_username;
 	private $_passhash;
@@ -50,6 +46,7 @@ class UserAccess {
 	public function logout() {
 		session_start(); 
 		session_destroy();
+		setcookie(session_name(), "", time() - 3600, "/");
 	}
 	
 	public function login($username, $password) {

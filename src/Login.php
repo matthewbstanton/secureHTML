@@ -1,5 +1,8 @@
-<?php
-	include("Classes/UserAccess.php");
+<?php	
+	function __autoload($class_name) {
+ 		include ('Classes/'.$class_name . '.php');
+	}
+	
 	$config = new Config();
 	session_start();
 	if($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -10,6 +13,9 @@
 		
 		if ($login == False) {
 			print("login failed");
+			/*Test aes*/
+			$sec = new Security();
+			print $sec->encrypt($sec->decrypt("ABC"));
 		}
 		else {
 			header("location: " . $config->getWelcomePage());
