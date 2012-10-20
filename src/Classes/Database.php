@@ -41,7 +41,7 @@ class Database {
 				
 		$result = mysql_query($sql) or die(mysql_error());
 		$row = mysql_fetch_array($result);
-		return $row['PERMID'];
+		return $row['GROUPID'];
 	}
 	
 	public function getUserPassHash($username) {
@@ -70,9 +70,9 @@ class Database {
 			$this->connect();
 			$sql = "INSERT INTO GROUPS
 					VALUES('$groupid', '$permid');";
+					
+			mysql_query($sql) or die(mysql_error());
 		}
-				
-		mysql_query($sql) or die(mysql_error());
 	}
 	
 	public function createPermission($permname, $readwrite) {
