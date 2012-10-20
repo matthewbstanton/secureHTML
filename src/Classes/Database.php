@@ -22,6 +22,28 @@ class Database {
 		return $db_selected;
 	}
 	
+	private function getPermID($permname) {
+		$this->connect();
+		$sql = "SELECT PERMID
+				FROM PERMISSIONDEFINITION
+				WHERE PERMNAME = '$permname'";
+				
+		$result = mysql_query($sql) or die(mysql_error());
+		$row = mysql_fetch_array($result);
+		return $row['PERMID'];
+	}
+	
+	private function getGroupID($groupname) {
+		$this->connect();
+		$sql = "SELECT GROUPID
+				FROM GROUPPERMISSIONS
+				WHERE GROUPNAME = '$groupname'";
+				
+		$result = mysql_query($sql) or die(mysql_error());
+		$row = mysql_fetch_array($result);
+		return $row['PERMID'];
+	}
+	
 	public function getUserPassHash($username) {
 		
 		$this->connect();
@@ -34,5 +56,19 @@ class Database {
 		$row = mysql_fetch_array($result);
 		return $row['PASSCODE'];
 	}
+	
+	public function addUserToGroup($username, $groupname) {
+		$this->connect();
+
+		//$sql = "INSERT INTO ";
+	}
+	
+	public function addPermissionToGroup($permname, $groupname) {
+		$groupid = $this->getGroupID($groupname);
+		$permid = $this->getPermID($permname);
+		$this->connect();
+		$sql = "INSERT INTO GROUPS
+				VALUES('$groupid', '$permid');";
+	}
 }
-php?>
+?>
