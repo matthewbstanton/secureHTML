@@ -64,11 +64,16 @@ class Database {
 	}
 	
 	public function addPermissionToGroup($permname, $groupname) {
+		print $groupname;
 		$groupid = $this->getGroupID($groupname);
 		$permid = $this->getPermID($permname);
-		$this->connect();
-		$sql = "INSERT INTO GROUPS
-				VALUES('$groupid', '$permid');";
+		if ($groupid != 0 and $permid != 0) {
+			$this->connect();
+			$sql = "INSERT INTO GROUPS
+					VALUES('$groupid', '$permid');";
+		}
+				
+		//mysql_query($sql) or die(mysql_error());
 	}
 }
 ?>
