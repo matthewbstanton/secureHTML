@@ -14,8 +14,8 @@
 		if ($login == False) {
 			print("login failed");
 			/*Test aes*/
-			$sec = new Security();
-			print $sec->encrypt($sec->decrypt("ABC"));
+			//$sec = new Security();
+			//print $sec->encrypt($sec->decrypt("ABC"));
 		}
 		else {
 			header("location: " . $config->getWelcomePage());
