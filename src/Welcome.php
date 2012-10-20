@@ -1,11 +1,12 @@
 <?php
 
-	function __autoload($class_name) {
+	/*function __autoload($class_name) {
  		include ('Classes/'.$class_name . '.php');
 	}
 	
 	$useraccess = new UserAccess();
-	$useraccess->sessionValidation();
+	$useraccess->sessionValidation();*/
+	include_once "Header.php";
 	print("Welcome " . $useraccess->getUsername());
 ?>
 <body>
