@@ -4,7 +4,9 @@
 	}
 	
 	$config = new Config();
-	session_start();
+	if(session_id() == '') {
+		session_start();
+	}
 	if($_SERVER["REQUEST_METHOD"] == "POST") {
 		$username = $_POST['username'];
 		$password = $_POST['password'];
