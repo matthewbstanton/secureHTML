@@ -64,7 +64,6 @@ class Database {
 	}
 	
 	public function addPermissionToGroup($permname, $groupname) {
-		print $groupname;
 		$groupid = $this->getGroupID($groupname);
 		$permid = $this->getPermID($permname);
 		if ($groupid != 0 and $permid != 0) {
@@ -73,7 +72,23 @@ class Database {
 					VALUES('$groupid', '$permid');";
 		}
 				
-		//mysql_query($sql) or die(mysql_error());
+		mysql_query($sql) or die(mysql_error());
+	}
+	
+	public function createPermission($permname, $readwrite) {
+		$this->connect();
+		$sql = "INSERT INTO PERMISSIONDEFINITION (PERMNAME, ACCESS)
+				VALUES('$permname', '$readwrite');";
+				
+		mysql_query($sql) or die(mysql_error());
+	}
+	
+	public function createGroup($groupname) {
+		$this->connect();
+		$sql = "INSERT INTO GROUPPERMISSIONS (GROUPNAME)
+				VALUES('$groupname');";
+				
+		mysql_query($sql) or die(mysql_error());
 	}
 }
 ?>
