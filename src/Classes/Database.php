@@ -90,5 +90,15 @@ class Database {
 				
 		mysql_query($sql) or die(mysql_error());
 	}
+	
+	public function retrieveDocumentList($username) {
+		$this->connect();
+		$sql = "SELECT PASSCODE
+				FROM USERS
+				WHERE USERNAME = '$username'";
+				
+		$result = mysql_query($sql) or die(mysql_error());
+		return $result;
+	}
 }
 ?>
