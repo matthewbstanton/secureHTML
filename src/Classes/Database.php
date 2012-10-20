@@ -35,4 +35,4 @@ class Database {
 		return $row['PASSCODE'];
 	}
 }
-php?>
+?>

@@ -16,12 +16,16 @@ class UserAccess {
 	}
 	
 	public function getUsername() {
-		session_start();
+		if(session_id() == '') {
+			session_start();
+		}
 		return $_SESSION['SESS_MEMBER_ID'];
 	}
 	
 	public function isLoggedIn() {
-		session_start();
+		if(session_id() == '') {
+			session_start();
+		}
 		if (!isset($_SESSION['SESS_MEMBER_ID']) || $_SESSION['SESS_MEMBER_ID'] == '')
 			return False;
 		else
