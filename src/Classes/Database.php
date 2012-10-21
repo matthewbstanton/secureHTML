@@ -93,12 +93,14 @@ class Database {
 	
 	public function retrieveDocumentList($username) {
 		$this->connect();
-		$sql = "SELECT PASSCODE
-				FROM USERS
-				WHERE USERNAME = '$username'";
+		$sql = "SELECT DD.DOCUMENTID, DD.DESCRIPTION FROM DOCUMENTDEFINITION AS DD
+				INNER JOIN PERMISSIONDEFINITION AS PD ON PD.PERMID = DD.PERMID
+				INNER JOIN GROUPS AS G ON G.PERMID = PD.PERMID
+				INNER JOIN GROUPPERMISSIONS AS GP ON GP.GROUPID = G.GROUPID
+				INNER JOIN USERS AS U ON U.GROUPID = GP.GROUPID
+				WHERE U.USERNAME = '$username';";
 				
-		$result = mysql_query($sql) or die(mysql_error());
-		return $result;
+		return mysql_query($sql);
 	}
 }
 ?>

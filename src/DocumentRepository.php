@@ -8,10 +8,19 @@
 	$useraccess->sessionValidation();*/
 	
 	function listDocuments(){
-		echo "Called listDocuments()";
+		//echo "Called listDocuments()";
 		include_once "Header.php";
 		$doc = new Document();
 		$list = $doc->getDocumentList($useraccess->getUsername());
+		if(!$list) {
+			echo 'There were no documents that you have access to';
+			return;
+		}
+		while ($row = mysql_fetch_assoc($list)) {
+			echo '<tr><td>';
+			echo '<input type="radio" name="document" value="test">';
+			echo '</td></tr>';
+		}
 	}
 ?>
 <html>
@@ -25,9 +34,9 @@
 		<form>
 			<table id="documentList" border="1" width="95%">
 				<tr bgcolor="#aaaaaa">
-					<td width="5%"><td>
-					<td width="35%"> Document Name </td>
-					<td width="60%"> Document Description </td>
+					<th width="5%"><th>
+					<th width="35%"> Document Name </th>
+					<th width="60%"> Document Description </th>
 				<tr/>
 				<?php listDocuments() ?>
 			</table>
