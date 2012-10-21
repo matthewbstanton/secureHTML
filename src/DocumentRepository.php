@@ -1,12 +1,4 @@
-<?php
-	
-	/*function __autoload($class_name) {
- 		include ('Classes/'.$class_name . '.php');
-	}
-	
-	$useraccess = new UserAccess();
-	$useraccess->sessionValidation();*/
-	
+<?php	
 	function listDocuments(){
 		//echo "Called listDocuments()";
 		include_once "Header.php";
@@ -17,9 +9,11 @@
 			return;
 		}
 		while ($row = mysql_fetch_assoc($list)) {
-			echo '<tr><td>';
-			echo '<input type="radio" name="document" value="test">';
-			echo '</td></tr>';
+			echo '<tr>';
+			echo '<td><input type="radio" name="document" value="'.$row["DOCUMENTID"].'"></td>';
+			echo '<td>'.$row["DOCUMENTNAME"].'</td>';
+			echo '<td>'.$row["DESCRIPTION"].'</td>';
+			echo '</tr>';
 		}
 	}
 ?>
@@ -34,7 +28,7 @@
 		<form>
 			<table id="documentList" border="1" width="95%">
 				<tr bgcolor="#aaaaaa">
-					<th width="5%"><th>
+					<th width="5%"></th>
 					<th width="35%"> Document Name </th>
 					<th width="60%"> Document Description </th>
 				<tr/>
