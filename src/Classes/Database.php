@@ -44,6 +44,17 @@ class Database {
 		return $row['GROUPID'];
 	}
 	
+	private function getUserID($username) {
+		$this->connect();
+		$sql = "SELECT USERID
+				FROM USERS
+				WHERE USERNAME = '$username'";
+
+		$result = mysql_query($sql) or die(mysql_error());
+		$row = mysql_fetch_array($result);
+		return $row['USERID'];
+	}
+	
 	public function getUserPassHash($username) {
 		
 		$this->connect();
@@ -57,12 +68,6 @@ class Database {
 		return $row['PASSCODE'];
 	}
 	
-	public function addUserToGroup($username, $groupname) {
-		$this->connect();
-
-		//$sql = "INSERT INTO ";
-	}
-	
 	public function addPermissionToGroup($permname, $groupname) {
 		$groupid = $this->getGroupID($groupname);
 		$permid = $this->getPermID($permname);
@@ -70,6 +75,19 @@ class Database {
 			$this->connect();
 			$sql = "INSERT INTO GROUPS
 					VALUES('$groupid', '$permid');";
+					
+			mysql_query($sql) or die(mysql_error());
+		}
+	}
+	
+	public function addGroupToUser($groupname, $username) {
+		$groupid = $this->getGroupID($groupname);
+		$userid = $this->getUserID($username);
+		if ($groupid != 0 and $userid != 0) {
+			$this->connect();
+			$sql = "UPDATE USERS
+					SET GROUPID = '$groupid'
+					WHERE USERID = '$userid';";
 					
 			mysql_query($sql) or die(mysql_error());
 		}

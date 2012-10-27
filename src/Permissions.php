@@ -20,6 +20,11 @@
 			$groupname = $_POST['newgroupname'];
 			$_db->createGroup($groupname);
 		}
+		else if($_POST['addgrouptouser']) {
+			$groupname = $_POST['groupnameforuser'];
+			$username = $_POST['userforgroup'];
+			$_db->addGroupToUser($groupname, $username);
+		}
 	}
 ?>
 <!DOCTYPE html>
@@ -75,6 +80,6 @@ jQuery(document).ready(function($){
 	<input id="groups2" type="text" name="groupnameforuser"/><br />
 	<label>User name :</label>
 	<input id="users" type="text" name="userforgroup"/><br />
-	<input type="submit" name = "addusertogroup" value=" Add User to Group "/><br />
+	<input type="submit" name = "addgrouptouser" value=" Add Group to User "/><br />
 	</form>
 </body>
