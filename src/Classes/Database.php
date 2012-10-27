@@ -112,12 +112,28 @@ class Database {
 		$result = mysql_query($sql);
 		
 		return $result;
+	}
+	
+	public function searchGroups($search) {
+		$this->connect();
+		$sql = "SELECT GROUPNAME
+				FROM GROUPPERMISSIONS
+				WHERE GROUPNAME LIKE '$search%';";
 
-			
-		//$row = mysql_fetch_array($result);
-		//return $row;
-		//print($row["USERNAME"]);
+		$result = mysql_query($sql);
 		
+		return $result;
+	}
+	
+	public function searchPerms($search) {
+		$this->connect();
+		$sql = "SELECT PERMNAME
+				FROM PERMISSIONDEFINITION
+				WHERE PERMNAME LIKE '$search%';";
+
+		$result = mysql_query($sql);
+		
+		return $result;
 	}
 }
 ?>

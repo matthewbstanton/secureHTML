@@ -34,6 +34,15 @@
 jQuery(document).ready(function($){
 	$('#users').autocomplete({source:'autocomplete_users.php', minLength:2});
 });
+jQuery(document).ready(function($){
+	$('#groups').autocomplete({source:'autocomplete_groups.php', minLength:2});
+});
+jQuery(document).ready(function($){
+	$('#groups2').autocomplete({source:'autocomplete_groups.php', minLength:2});
+});
+jQuery(document).ready(function($){
+	$('#perms').autocomplete({source:'autocomplete_perms.php', minLength:2});
+});
 
     
 </script>
@@ -41,9 +50,9 @@ jQuery(document).ready(function($){
 <body>	
 	<form action="" method="post">
 	<label>Permission Name :</label>
-	<input type="text" name="permname"/><br />
+	<input id="perms" type="text" name="permname"/><br />
 	<label>Group Name :</label>
-	<input type="text" name="groupname"/><br/>
+	<input id="groups" type="text" name="groupname"/><br/>
 	<input type="submit" name="addpermtogroup" value=" Add Permission to Group "/><br />
 	</form>
 	
@@ -63,7 +72,7 @@ jQuery(document).ready(function($){
 	
 	<form action="" method="post">
 	<label>Group name :</label>
-	<input type="text" name="groupnameforuser"/><br />
+	<input id="groups2" type="text" name="groupnameforuser"/><br />
 	<label>User name :</label>
 	<input id="users" type="text" name="userforgroup"/><br />
 	<input type="submit" name = "addusertogroup" value=" Add User to Group "/><br />
