@@ -102,5 +102,22 @@ class Database {
 				
 		return mysql_query($sql);
 	}
+	
+	public function searchUsers($search) {
+		$this->connect();
+		$sql = "SELECT USERNAME
+				FROM USERS
+				WHERE USERNAME LIKE '$search%';";
+
+		$result = mysql_query($sql);
+		
+		return $result;
+
+			
+		//$row = mysql_fetch_array($result);
+		//return $row;
+		//print($row["USERNAME"]);
+		
+	}
 }
 ?>

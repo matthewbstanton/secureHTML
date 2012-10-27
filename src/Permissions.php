@@ -1,6 +1,7 @@
 <?php
 	include_once "Header.php";
 	$_db = new Database();
+	$_db->searchUsers('A');
 		if(session_id() == '') {
 		session_start();
 	}
@@ -21,25 +22,50 @@
 		}
 	}
 ?>
+<!DOCTYPE html>
+<html>
+<head>
+<!--<script src="jquery.js"></script>-->
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/black-tie/jquery-ui.css" type="text/css" />
+<script src="http://code.jquery.com/jquery-1.8.2.js"></script>
+<script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
 
-<form action="" method="post">
-<label>Permission Name :</label>
-<input type="text" name="permname"/><br />
-<label>Group Name :</label>
-<input type="text" name="groupname"/><br/>
-<input type="submit" name="addpermtogroup" value=" Add Permission to Group "/><br />
-</form>
+<script>
+jQuery(document).ready(function($){
+	$('#users').autocomplete({source:'autocomplete_users.php', minLength:2});
+});
 
-<form action="" method="post">
-<label>Permission Name :</label>
-<input type="text" name="newpermname"/><br />
-<input type="radio" name="readwrite" value="R" checked> Read<br>
-<input type="radio" name="readwrite" value="W"> Write<br> 
-<input type="submit" name = "createperm" value=" Create Permission "/><br />
-</form>
-
-<form action="" method="post">
-<label>Group Name :</label>
-<input type="text" name="newgroupname"/><br />
-<input type="submit" name = "creategroup" value=" Create Group "/><br />
-</form>
+    
+</script>
+</head>
+<body>	
+	<form action="" method="post">
+	<label>Permission Name :</label>
+	<input type="text" name="permname"/><br />
+	<label>Group Name :</label>
+	<input type="text" name="groupname"/><br/>
+	<input type="submit" name="addpermtogroup" value=" Add Permission to Group "/><br />
+	</form>
+	
+	<form action="" method="post">
+	<label>Permission Name :</label>
+	<input type="text" name="newpermname"/><br />
+	<input type="radio" name="readwrite" value="R" checked> Read<br>
+	<input type="radio" name="readwrite" value="W"> Write<br> 
+	<input type="submit" name = "createperm" value=" Create Permission "/><br />
+	</form>
+	
+	<form action="" method="post">
+	<label>Group Name :</label>
+	<input type="text" name="newgroupname"/><br />
+	<input type="submit" name = "creategroup" value=" Create Group "/><br />
+	</form>
+	
+	<form action="" method="post">
+	<label>Group name :</label>
+	<input type="text" name="groupnameforuser"/><br />
+	<label>User name :</label>
+	<input id="users" type="text" name="userforgroup"/><br />
+	<input type="submit" name = "addusertogroup" value=" Add User to Group "/><br />
+	</form>
+</body>
