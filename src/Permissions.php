@@ -52,34 +52,43 @@ jQuery(document).ready(function($){
     
 </script>
 </head>
-<body>	
-	<form action="" method="post">
-	<label>Permission Name :</label>
-	<input id="perms" type="text" name="permname"/><br />
-	<label>Group Name :</label>
-	<input id="groups" type="text" name="groupname"/><br/>
-	<input type="submit" name="addpermtogroup" value=" Add Permission to Group "/><br />
-	</form>
-	
-	<form action="" method="post">
-	<label>Permission Name :</label>
-	<input type="text" name="newpermname"/><br />
-	<input type="radio" name="readwrite" value="R" checked> Read<br>
-	<input type="radio" name="readwrite" value="W"> Write<br> 
-	<input type="submit" name = "createperm" value=" Create Permission "/><br />
-	</form>
-	
-	<form action="" method="post">
-	<label>Group Name :</label>
-	<input type="text" name="newgroupname"/><br />
-	<input type="submit" name = "creategroup" value=" Create Group "/><br />
-	</form>
-	
-	<form action="" method="post">
-	<label>Group name :</label>
-	<input id="groups2" type="text" name="groupnameforuser"/><br />
-	<label>User name :</label>
-	<input id="users" type="text" name="userforgroup"/><br />
-	<input type="submit" name = "addgrouptouser" value=" Add Group to User "/><br />
-	</form>
+	<body>
+		<h1>Permissions</h1>
+		<fieldset>
+		<legend><b>Create Permissions and Groups<b></legend>
+		<form action="" method="post">
+		<label>Permission Name :</label>
+		<input type="text" name="newpermname"/><br />
+		<input type="radio" name="readwrite" value="R" checked> Read<br>
+		<input type="radio" name="readwrite" value="W"> Write<br> 
+		<input type="submit" name = "createperm" value=" Create Permission "/><br />
+		</form>
+		
+		<form action="" method="post">
+		<label>Group Name :</label>
+		<input type="text" name="newgroupname"/><br />
+		<input type="submit" name = "creategroup" value=" Create Group "/><br />
+		</form>
+		</fieldset>
+		
+		<fieldset>
+		<legend><b>Attach Permissions to Groups<b></legend>
+		<form action="" method="post">
+		<label>Permission Name :</label>
+		<input id="perms" type="text" name="permname"/><br />
+		<label>Group Name :</label>
+		<input id="groups" type="text" name="groupname"/><br/>
+		<input type="submit" name="addpermtogroup" value=" Add Permission to Group "/><br />
+		</form>
+		</fieldset>
+		
+		<fieldset>
+		<legend><b>Attach Groups to User<b></legend>
+		<form action="" method="post">
+		<label>Group name :</label>
+		<input id="groups2" type="text" name="groupnameforuser"/><br />
+		<label>User name :</label>
+		<input id="users" type="text" name="userforgroup"/><br />
+		<input type="submit" name = "addgrouptouser" value=" Attach Group to User "/><br />
+		</form>
 </body>
