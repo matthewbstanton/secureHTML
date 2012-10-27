@@ -1,8 +1,9 @@
 <?php	
+	include_once "Header.php";
 	function listDocuments(){
 		//echo "Called listDocuments()";
-		include_once "Header.php";
 		$doc = new Document();
+		$useraccess = new UserAccess();
 		$list = $doc->getDocumentList($useraccess->getUsername());
 		if(!$list) {
 			echo 'There were no documents that you have access to';
