@@ -5,6 +5,4 @@
 	
 	$useraccess = new UserAccess();
 	$useraccess->sessionValidation();
-	include_once "menu.php";
-	
 ?>

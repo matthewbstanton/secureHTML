@@ -30,6 +30,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<?php include_once "menu.php";?>
 <!--<script src="jquery.js"></script>-->
 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/black-tie/jquery-ui.css" type="text/css" />
 <script src="http://code.jquery.com/jquery-1.8.2.js"></script>

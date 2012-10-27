@@ -20,6 +20,7 @@
 ?>
 <html>
 	<head>
+		<?php include_once "menu.php";?>
 		<title>Document Repository</title>
 	</head>
 	<body>
