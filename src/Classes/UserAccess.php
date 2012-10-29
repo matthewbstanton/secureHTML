@@ -67,5 +67,9 @@ class UserAccess {
 			return False;
 		}
 	}
+	
+	public function getPermissions($username) {
+		
+	}
 }
 ?>
