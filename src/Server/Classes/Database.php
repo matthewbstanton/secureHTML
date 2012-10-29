@@ -149,9 +149,17 @@ class Database {
 				FROM PERMISSIONDEFINITION
 				WHERE PERMNAME LIKE '$search%';";
 
-		$result = mysql_query($sql);
-		
-		return $result;
+		return mysql_query($sql);
+	}
+	
+	public function getUserPermissions($username) {
+		$this->connect();
+		$sql = "SELECT PERMNAME
+				FROM PERMISSIONDEFINITION PD
+				INNER JOIN GROUPS G ON G.PERMID = PD.PERMID
+				INNER JOIN USERS U ON U.GROUPID = G.GROUPID
+				WHERE U.USERNAME = '$username';";
+		return mysql_query($sql);
 	}
 }
 ?>

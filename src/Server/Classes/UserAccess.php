@@ -68,8 +68,8 @@ class UserAccess {
 		}
 	}
 	
-	public function getPermissions($username) {
-		
+	public function getPermissions() {
+		return $this->_db->getUserPermissions($this->getUsername());
 	}
 }
 ?>
