@@ -44,7 +44,7 @@ class Database {
 		return $row['GROUPID'];
 	}
 	
-	private function getUserID($username) {
+	public function getUserID($username) {
 		$this->connect();
 		$sql = "SELECT USERID
 				FROM USERS
@@ -75,11 +75,33 @@ class Database {
 	}
 
 	public function InsertDocumentSection($docid, $sectionid, $permid, $data) {
-		//$this->connect();
+		$this->connect();
 		$sql = "INSERT INTO DOCUMENTDATA (DOCUMENTID, SECTIONID, PERMID, SECTIONTEXT)
 				VALUES ('$docid', '$sectionid', '$permid', '$data');";
 		$result = mysql_query($sql) or die(mysql_error());
 		return $sectionid;
+	}
+	
+	public function getDocumentSections($docid, $userid) {
+		$this->connect();
+		$sql = "SELECT SECTIONTEXT
+				FROM DOCUMENTDATA DD
+				INNER JOIN GROUPS G ON DD.PERMID = G.PERMID
+				INNER JOIN USERS U ON U.GROUPID = G.GROUPID
+				WHERE U.USERID = '$userid' AND DD.DOCUMENTID ='$docid';";
+		return mysql_query($sql);
+	}
+	
+	public function getDocumentSectionCount($docid, $userid) {
+		$this->connect();
+		$sql = "SELECT COUNT(SECTIONTEXT) AS COUNT
+				FROM DOCUMENTDATA DD
+				INNER JOIN GROUPS G ON DD.PERMID = G.PERMID
+				INNER JOIN USERS U ON U.GROUPID = G.GROUPID
+				WHERE U.USERID = '$userid';";
+		$result = mysql_query($sql) or die(mysql_error());
+		$row = mysql_fetch_array($result);
+		return $row['COUNT'];
 	}
 	
 	public function getUserPassHash($username) {
@@ -138,8 +160,9 @@ class Database {
 	
 	public function retrieveDocumentList($username) {
 		$this->connect();
-		$sql = "SELECT DD.DOCUMENTID, DD.DESCRIPTION, DD.DOCUMENTNAME FROM DOCUMENTDEFINITION AS DD
-				INNER JOIN PERMISSIONDEFINITION AS PD ON PD.PERMID = DD.PERMID
+		$sql = "SELECT DD.DOCUMENTID, DD.DESCRIPTION, DD.DOCUMENTNAME
+				FROM DOCUMENTDEFINITION AS DD
+				INNER JOIN PERMISSIONDEFINITION AS PD ON PD.PERMID = DD.PERMID OR DD.PERMID = 0
 				INNER JOIN GROUPS AS G ON G.PERMID = PD.PERMID
 				INNER JOIN GROUPPERMISSIONS AS GP ON GP.GROUPID = G.GROUPID
 				INNER JOIN USERS AS U ON U.GROUPID = GP.GROUPID

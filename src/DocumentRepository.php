@@ -27,7 +27,7 @@
 		<h1>Document Repository</h1>
 		<fieldset>
 		<legend><b>Select the document you want to view<b></legend>
-		<form>
+		<form action="DocumentEdit.php?action=edit&docname=matttest10" method="POST">
 			<table id="documentList" border="1" width="95%">
 				<tr bgcolor="#aaaaaa">
 					<th width="5%"></th>
@@ -37,10 +37,10 @@
 				<?php listDocuments() ?>
 			</table>
 			<br />
-			<input type="submit" value=" Submit "/>
+			<input type="submit" value=" Edit "/>
 			<input type="reset" value=" Reset "/><br />
 		</form>
-		<form action="DocumentEdit.php" method="GET">
+		<form action="DocumentEdit.php?action=new" method="POST">
 		<div>
 		<input type="submit" value=" Create New Document ">
 		</div>

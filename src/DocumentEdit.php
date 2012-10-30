@@ -17,8 +17,43 @@ $permissions = $useraccess -> getPermissions();
 			var documentSectionCount = 0;
 		</script>
 		<script language="JavaScript">
+			function getUrlVars() {
+				var vars = [], hash;
+				var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+				for (var i = 0; i < hashes.length; i++) {
+					hash = hashes[i].split('=');
+					vars.push(hash[0]);
+					vars[hash[0]] = hash[1];
+				}
+				return vars;
+			}
+
 			var permissions = "";
 			var documentSectionCount = 0;
+			var docname = getUrlVars()["docname"];
+			if (getUrlVars()["action"] == "edit") {
+				$.getJSON("Server/server.php?function=getDocumentSections&docname=" + docname, function(jdata) {
+					for (var i = 0; i < jdata.length; i++) {
+						$(".documentSections_div").append("<br/>");
+						$(".documentSections_div").append("<select id = 'PermissionList_" + documentSectionCount + "' name = 'PermissionList_" + documentSectionCount + "' class='PermissionList'></select>");
+						$(".documentSections_div").append("<br/>");
+						$(".documentSections_div").append("<textarea id = 'TextArea_" + documentSectionCount + "' name = 'TextArea_" + documentSectionCount + "' class='SectionData'>" + jdata[i] + "</textarea>");
+						documentSectionCount++;
+					}
+				});
+				//json start
+				$.getJSON("Server/server.php?function=userPermissionList", function(permData) {
+					//alert(permData);
+					for (var i = 0; i < documentSectionCount; i++) {
+						for (var j = 0; j < permData.length; j++) {
+							alert("#PermissionList_" + i);
+							$("#PermissionList_" + i).append("<option value=" + permData[j] + ">" + permData[j] + "</option>");
+						}
+					}
+				});
+				//End json
+			}
+
 			$(document).ready(function() {
 				$("#addDocumentSection").click(function() {
 

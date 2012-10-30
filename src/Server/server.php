@@ -64,6 +64,17 @@ function saveDocument() {
 	//return $_POST['documentName'];
 }
 
+function getDocumentSections() {
+	$document = new Document();
+	$arrResults = $document->getDocumentSections($_GET['docname']);
+	return sqlDataToArray($arrResults, 'SECTIONTEXT');
+}
+
+function getDocumentSectionCount() {
+	$document = new Document();
+	return $document->getDocumentSectionCount($$_GET['docname']);
+}
+
 if ($_GET['function'] == 'login') {
 	login();
 }
@@ -79,5 +90,11 @@ else if ($_GET['function'] == 'autoComplete') {
 }
 else if ($_GET['function'] == 'saveDocument') {
 	echo json_encode(saveDocument());
+}
+else if ($_GET['function'] == 'getDocumentSections') {
+	echo json_encode(getDocumentSections());
+}
+else if ($_GET['function'] == 'getDocumentSectionCount') {
+	echo json_encode(getDocumentSectionCount());
 }
 ?>
