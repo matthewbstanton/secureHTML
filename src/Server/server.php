@@ -1,6 +1,26 @@
 <?php
 function __autoload($class_name) {
-	include ('Classes/' . $class_name . '.php');
+	include_once ('Classes/' . $class_name . '.php');
+}
+
+function login() {
+	$config = new Config();
+	if(session_id() == '') {
+		session_start();
+	}
+	if($_SERVER["REQUEST_METHOD"] == "POST") {
+		$username = $_POST['username'];
+		$password = $_POST['password'];
+		$useraccess = new UserAccess();
+		$login = $useraccess->login($username, $password);
+		
+		if ($login == False) {
+			header("location: " . $config->getLoginPage());
+		}
+		else {
+			header("location: " . $config->getWelcomePage());
+		}
+	}
 }
 
 function sqlDataToArray($data, $column) {
@@ -27,6 +47,10 @@ function autoComplete($term, $column) {
 	else if ($column == 'USERNAME')
 		$arrResults = $db->searchUsers($mySqlSearchSring);
 	return sqlDataToArray($arrResults, $column);
+}
+
+if ($_GET['function'] == 'login') {
+	login();
 }
 
 $useraccess = new UserAccess();

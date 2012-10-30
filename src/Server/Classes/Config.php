@@ -5,8 +5,8 @@
 		private $_mysql_password = "password";
 		private $_mysql_database = "secureHTML";
 		private $_loginPage = "login.php";
-		private $_logoutPage = "logout.php";
-		private $_welcomePage = "welcome.php";
+		private $_logoutPage = "../logout.php";
+		private $_welcomePage = "../welcome.php";
 		private $_hashAlgorithm = "sha512";
 		#Must be 56-bit long key
 		private $_securityKey = "abcdefgh01234567";
