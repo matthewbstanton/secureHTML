@@ -22,7 +22,7 @@ class Database {
 		return $db_selected;
 	}
 	
-	private function getPermID($permname) {
+	public function getPermID($permname) {
 		$this->connect();
 		$sql = "SELECT PERMID
 				FROM PERMISSIONDEFINITION
@@ -53,6 +53,33 @@ class Database {
 		$result = mysql_query($sql) or die(mysql_error());
 		$row = mysql_fetch_array($result);
 		return $row['USERID'];
+	}
+	
+	public function getDocumentID($documentName) {
+		$this->connect();
+		$sql = "SELECT DOCUMENTID
+				FROM DOCUMENTDEFINITION
+				WHERE DOCUMENTNAME = '$documentName'";
+
+		$result = mysql_query($sql) or die(mysql_error());
+		$row = mysql_fetch_array($result);
+		return $row['DOCUMENTID'];
+	}
+	
+	public function createDocumentDefinition($name, $description, $permid) {
+		$this->connect();
+		$sql = "INSERT INTO DOCUMENTDEFINITION (DOCUMENTNAME, DESCRIPTION, PERMID)
+				VALUES ('$name', '$description', '$permid');";
+		$result = mysql_query($sql) or die(mysql_error());
+		return $this->getDocumentID($name);
+	}
+
+	public function InsertDocumentSection($docid, $sectionid, $permid, $data) {
+		//$this->connect();
+		$sql = "INSERT INTO DOCUMENTDATA (DOCUMENTID, SECTIONID, PERMID, SECTIONTEXT)
+				VALUES ('$docid', '$sectionid', '$permid', '$data');";
+		$result = mysql_query($sql) or die(mysql_error());
+		return $sectionid;
 	}
 	
 	public function getUserPassHash($username) {

@@ -51,7 +51,17 @@ function autoComplete($term, $column) {
 
 function saveDocument() {
 	//return $_POST['PermissionList_0'];
+	//return $_GET['count'];
+	$sectionCount = $_GET['count'];
+	$document = new Document();
+	$docid = $document->createDocumentDefinition($_POST['documentName'], 'DESCRIPTION', 0);
+	for ($i=0; $i<$sectionCount; $i++) {
+		$permname = $_POST['PermissionList_' . $i];
+		$data = $_POST['TextArea_' . $i];
+		$document->saveDocumentSection($docid, $i, $permname, $data);
+	}
 	return print_r($_POST);
+	//return $_POST['documentName'];
 }
 
 if ($_GET['function'] == 'login') {

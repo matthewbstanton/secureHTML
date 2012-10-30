@@ -2,7 +2,6 @@
 include_once "Header.php";
 $useraccess = new UserAccess();
 $permissions = $useraccess -> getPermissions();
-print($permissions);
 ?>
 
 <!DOCTYPE html>
@@ -20,7 +19,6 @@ print($permissions);
 		<script language="JavaScript">
 			var permissions = "";
 			var documentSectionCount = 0;
-			var formContent = "action=getlink&link=abc";
 			$(document).ready(function() {
 				$("#addDocumentSection").click(function() {
 
@@ -44,7 +42,6 @@ print($permissions);
 						// do other stuff for a valid form
 						$.post('Server/server.php?function=saveDocument&count=' + documentSectionCount, $("#docSections").serialize(), function(data) {
 							alert(data);
-							//$('#results').html(data);
 						});
 					}
 				});
@@ -62,6 +59,7 @@ print($permissions);
 				</button>
 			</div>
 			<form name="docSections" id="docSections" method="post">
+				<input type="text" name="documentName">
 				<div class="documentSections_div">
 
 				</div>

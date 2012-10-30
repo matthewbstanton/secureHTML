@@ -40,6 +40,11 @@
 			<input type="submit" value=" Submit "/>
 			<input type="reset" value=" Reset "/><br />
 		</form>
+		<form action="DocumentEdit.php" method="GET">
+		<div>
+		<input type="submit" value=" Create New Document ">
+		</div>
+		</form>
 		</fieldset>
 	</body>
 </html>
