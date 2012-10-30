@@ -38,16 +38,16 @@
 
 <script>
 jQuery(document).ready(function($){
-	$('#users').autocomplete({source:'autocomplete_users.php', minLength:2});
+	$('#users').autocomplete({source:'Server/server.php?function=autoComplete&param1=USERNAME', minLength:1});
 });
 jQuery(document).ready(function($){
-	$('#groups').autocomplete({source:'autocomplete_groups.php', minLength:2});
+	$('#groups').autocomplete({source:'Server/server.php?function=autoComplete&param1=GROUPNAME', minLength:1});
 });
 jQuery(document).ready(function($){
-	$('#groups2').autocomplete({source:'autocomplete_groups.php', minLength:2});
+	$('#groups2').autocomplete({source:'Server/server.php?function=autoComplete&param1=GROUPNAME', minLength:1});
 });
 jQuery(document).ready(function($){
-	$('#perms').autocomplete({source:'autocomplete_perms.php', minLength:2});
+	$('#perms').autocomplete({source:'Server/server.php?function=autoComplete&param1=PERMNAME', minLength:1});
 });
 
     

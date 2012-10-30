@@ -27,7 +27,7 @@ print($permissions);
 					$(".documentSections_div").append("<textarea class='SectionData'></textarea>");
 					
 					//json start
-					$.getJSON("Server/server.php", function(jdata) {
+					$.getJSON("Server/server.php?function=userPermissionList", function(jdata) {
 						for(var i = 0; i < jdata.length; i++)
 							$("#PermissionList_" + documentSectionCount).append("<option value=Min_DurationVar>" + jdata[i] + "</option>");
 						
