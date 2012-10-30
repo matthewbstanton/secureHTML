@@ -49,6 +49,11 @@ function autoComplete($term, $column) {
 	return sqlDataToArray($arrResults, $column);
 }
 
+function saveDocument() {
+	//return $_POST['PermissionList_0'];
+	return print_r($_POST);
+}
+
 if ($_GET['function'] == 'login') {
 	login();
 }
@@ -61,5 +66,8 @@ if ($_GET['function'] == 'userPermissionList') {
 }
 else if ($_GET['function'] == 'autoComplete') {
 	echo json_encode(autoComplete($_REQUEST['term'], $_GET['param1'])); 
+}
+else if ($_GET['function'] == 'saveDocument') {
+	echo json_encode(saveDocument());
 }
 ?>
