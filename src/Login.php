@@ -1,7 +1,7 @@
 <?php	
 	function __autoload($class_name) {
- 		include ('Classes/'.$class_name . '.php');
-	}
+	 		include ('Server/Classes/'.$class_name . '.php');
+		}
 	
 	$config = new Config();
 	if(session_id() == '') {
