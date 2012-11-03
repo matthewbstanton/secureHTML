@@ -84,7 +84,7 @@ class Database {
 	
 	public function getDocumentSections($docid, $userid) {
 		$this->connect();
-		$sql = "SELECT SECTIONTEXT
+		$sql = "SELECT DD.SECTIONTEXT AS SECTIONTEXT, DD.PERMID AS PERMID
 				FROM DOCUMENTDATA DD
 				INNER JOIN GROUPS G ON DD.PERMID = G.PERMID
 				INNER JOIN USERS U ON U.GROUPID = G.GROUPID

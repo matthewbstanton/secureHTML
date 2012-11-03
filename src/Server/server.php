@@ -31,6 +31,16 @@ function sqlDataToArray($data, $column) {
 	return $myarray;
 }
 
+function sqlDataTo2dArray($data, $column, $column2) {
+	$myarray = array();
+	$myarray2 = array();
+	while ($row = mysql_fetch_assoc($data)) {
+		array_push($myarray, $row[$column]);
+		array_push($myarray2, $row[$column2]);
+	}
+	return array($myarray, $myarray2);
+}
+
 function userPermissionList() {
 	$useraccess = new UserAccess();
 	$arrResults = $useraccess -> getPermissions();
@@ -70,6 +80,12 @@ function getDocumentSections() {
 	return sqlDataToArray($arrResults, 'SECTIONTEXT');
 }
 
+function getDocumentSectionsEdit() {
+	$document = new Document();
+	$arrResults = $document->getDocumentSections($_GET['docname']);
+	return sqlDataTo2dArray($arrResults, 'SECTIONTEXT', 'PERMID');
+}
+
 function getDocumentSectionCount() {
 	$document = new Document();
 	return $document->getDocumentSectionCount($$_GET['docname']);
@@ -96,5 +112,8 @@ else if ($_GET['function'] == 'getDocumentSections') {
 }
 else if ($_GET['function'] == 'getDocumentSectionCount') {
 	echo json_encode(getDocumentSectionCount());
+}
+else if ($_GET['function'] == 'getDocumentSectionsEdit') {
+	echo json_encode(getDocumentSectionsEdit());
 }
 ?>

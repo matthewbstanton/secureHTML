@@ -7,10 +7,6 @@ Class Document{
 		$this->_useraccess = new UserAccess();
 	}
 	
-	public function getDocument($id) {
-	
-	}
-	
 	public function saveDocumentSection($docid, $sectionid, $permname, $data) {
 		$permid = $this->_db->getPermID($permname);
 		return $this->_db->InsertDocumentSection($docid, $sectionid, $permid, $data);
