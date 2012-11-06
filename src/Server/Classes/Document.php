@@ -37,7 +37,10 @@ Class Document {
 	public function saveDocumentSection($docid, $sectionid, $permname, $data) {
 		$permid = $this -> _db -> getPermID($permname);
 		$encrypted_data = $this -> _security -> encrypt($data);
-		return $this -> _db -> InsertDocumentSection($docid, $sectionid, $permid, $encrypted_data);
+		if ($this -> _db -> documentSectionExists($docid, $sectionid) > 0)
+			return $this -> _db -> UpdateDocumentSection($docid, $sectionid, $permid, $encrypted_data);
+		else
+			return $this -> _db -> InsertDocumentSection($docid, $sectionid, $permid, $encrypted_data);
 	}
 
 	public function getDocumentSections($docname) {
@@ -59,7 +62,11 @@ Class Document {
 	}
 
 	public function createDocumentDefinition($docname, $description, $permid) {
-		return $this -> _db -> createDocumentDefinition($docname, $description, $permid);
+		$docexists = $this -> _db -> documentExists($docname);
+		if ($docexists > 0)
+			return $this -> _db -> getDocumentID($docname);
+		else
+			return $this -> _db -> createDocumentDefinition($docname, $description, $permid);
 	}
 
 	public function getDocumentList($username) {

@@ -82,6 +82,15 @@ class Database {
 		return $sectionid;
 	}
 
+	public function UpdateDocumentSection($docid, $sectionid, $permid, $data) {
+		$this -> connect();
+		$sql = "UPDATE DOCUMENTDATA
+				SET SECTIONTEXT = '$data', PERMID = $permid
+				WHERE DOCUMENTID = $docid AND SECTIONID = $sectionid;";
+		$result = mysql_query($sql) or die(mysql_error());
+		return $sectionid;
+	}
+
 	public function getDocumentSections($docid, $userid) {
 		$this -> connect();
 		$sql = "SELECT DD.SECTIONTEXT AS SECTIONTEXT, PD.PERMNAME AS PERMID
@@ -95,11 +104,31 @@ class Database {
 
 	public function getDocumentSectionCount($docid, $userid) {
 		$this -> connect();
-		$sql = "SELECT COUNT(SECTIONTEXT) AS COUNT
+		$sql = "SELECT COUNT(1) AS COUNT
 				FROM DOCUMENTDATA DD
 				INNER JOIN GROUPS G ON DD.PERMID = G.PERMID
 				INNER JOIN USERS U ON U.GROUPID = G.GROUPID
 				WHERE U.USERID = '$userid';";
+		$result = mysql_query($sql) or die(mysql_error());
+		$row = mysql_fetch_array($result);
+		return $row['COUNT'];
+	}
+
+	public function documentExists($docname) {
+		$this -> connect();
+		$sql = "SELECT COUNT(1) AS COUNT
+				FROM DOCUMENTDEFINITION DD
+				WHERE DD.DOCUMENTNAME = '$docname';";
+		$result = mysql_query($sql) or die(mysql_error());
+		$row = mysql_fetch_array($result);
+		return $row['COUNT'];
+	}
+
+	public function documentSectionExists($docid, $sectionid) {
+		$this -> connect();
+		$sql = "SELECT COUNT(1) AS COUNT
+				FROM DOCUMENTDATA DD
+				WHERE DD.DOCUMENTID = $docid AND DD.SECTIONID = $sectionid;";
 		$result = mysql_query($sql) or die(mysql_error());
 		$row = mysql_fetch_array($result);
 		return $row['COUNT'];

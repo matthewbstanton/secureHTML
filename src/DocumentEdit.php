@@ -27,6 +27,12 @@ $permissions = $useraccess -> getPermissions();
 				return vars;
 			}
 
+			function sleep(ms) {
+				var dt = new Date();
+				dt.setTime(dt.getTime() + ms);
+				while (new Date().getTime() < dt.getTime());
+			}
+
 			var documentSectionCount = 0;
 			var docname = getUrlVars()["docname"];
 			var docPermission = new Array();
@@ -72,6 +78,8 @@ $permissions = $useraccess -> getPermissions();
 					});
 					//End json
 				});
+
+				sleep(1000);
 
 				$("#docSections").validate({
 					submitHandler : function(form) {
