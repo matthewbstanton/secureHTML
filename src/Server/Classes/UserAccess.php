@@ -4,26 +4,26 @@ class UserAccess {
 	private $_username;
 	private $_passhash;
 	private $_db;
-	
-	public function __construct(){
-		$this->_db = new Database();
-		$this->_config = new Config();
-		$this->_security = new Security();
+
+	public function __construct() {
+		$this -> _db = new Database();
+		$this -> _config = new Config();
+		$this -> _security = new Security();
 	}
-	
+
 	public function setUsername($username) {
-		$this->_username = $username;
+		$this -> _username = $username;
 	}
-	
+
 	public function getUsername() {
-		if(session_id() == '') {
+		if (session_id() == '') {
 			session_start();
 		}
 		return $_SESSION['SESS_MEMBER_ID'];
 	}
-	
+
 	public function isLoggedIn() {
-		if(session_id() == '') {
+		if (session_id() == '') {
 			session_start();
 		}
 		if (!isset($_SESSION['SESS_MEMBER_ID']) || $_SESSION['SESS_MEMBER_ID'] == '')
@@ -31,45 +31,51 @@ class UserAccess {
 		else
 			return True;
 	}
-	
+
 	public function sessionValidation() {
-		if (!$this->isLoggedIn())
-			header("location: " . $this->_config->getLoginPage());
+		if (!$this -> isLoggedIn())
+			header("location: " . $this -> _config -> getLoginPage());
 	}
-	
+
 	public function setPassword($password) {
-		$this->_passhash = $this->_security->hash($password);
+		$this -> _passhash = $this -> _security -> hash($password);
 	}
-	
+
 	private function registerSession() {
 		session_regenerate_id();
-		$_SESSION['SESS_MEMBER_ID'] = $this->_username;
+		$_SESSION['SESS_MEMBER_ID'] = $this -> _username;
 		session_write_close();
 	}
-	
+
 	public function logout() {
-		session_start(); 
+		session_start();
 		session_destroy();
 		setcookie(session_name(), "", time() - 3600, "/");
 	}
-	
+
 	public function login($username, $password) {
-		$this->setUsername($username);
-		$this->setPassword($password);
+		$this -> setUsername($username);
+		$this -> setPassword($password);
 
-		$dbpasshash = $this->_db->getUserPassHash($this->_username);
+		$dbpasshash = $this -> _db -> getUserPassHash($this -> _username);
 
-		if($this->_passhash == $dbpasshash) {
-			$this->registerSession();
+		if ($this -> _passhash == $dbpasshash) {
+			$this -> registerSession();
 			return True;
-		}
-		else {
+		} else {
 			return False;
 		}
 	}
-	
+
 	public function getPermissions() {
-		return $this->_db->getUserPermissions($this->getUsername());
+		return $this -> _db -> getUserPermissions($this -> getUsername());
 	}
+
+	public function __destruct() {
+		unset($this -> _config);
+		unset($this -> _security);
+		unset($this -> _db);
+	}
+
 }
 ?>

@@ -19,5 +19,10 @@ class Security {
 	public function decrypt($cipherText) {
 		return $this->_aes->decrypt($cipherText);
 	}
+	
+	public function __destruct() {
+		unset($this -> _config);
+		unset($this -> _aes);
+	}
 }
 ?>

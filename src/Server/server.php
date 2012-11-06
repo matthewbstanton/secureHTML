@@ -5,6 +5,9 @@ function __autoload($class_name) {
 
 function login() {
 	$config = new Config();
+	$loginpage = $config->getLoginPage();
+	$welcomepage = $config->getWelcomePage();
+	unset($config);
 	if(session_id() == '') {
 		session_start();
 	}
@@ -15,10 +18,10 @@ function login() {
 		$login = $useraccess->login($username, $password);
 		
 		if ($login == False) {
-			header("location: " . $config->getLoginPage());
+			header("location: " . $loginpage);
 		}
 		else {
-			header("location: " . $config->getWelcomePage());
+			header("location: " . $welcomepage);
 		}
 	}
 }
@@ -44,6 +47,7 @@ function sqlDataTo2dArray($data, $column, $column2) {
 function userPermissionList() {
 	$useraccess = new UserAccess();
 	$arrResults = $useraccess -> getPermissions();
+	unset($useraccess);
 	return sqlDataToArray($arrResults, 'PERMNAME');
 }
 
@@ -56,12 +60,11 @@ function autoComplete($term, $column) {
 		$arrResults = $db->searchGroups($mySqlSearchSring);
 	else if ($column == 'USERNAME')
 		$arrResults = $db->searchUsers($mySqlSearchSring);
+	unset($db);
 	return sqlDataToArray($arrResults, $column);
 }
 
 function saveDocument() {
-	//return $_POST['PermissionList_0'];
-	//return $_GET['count'];
 	$sectionCount = $_GET['count'];
 	$document = new Document();
 	$docid = $document->createDocumentDefinition($_POST['documentName'], 'DESCRIPTION', 0);
@@ -70,25 +73,22 @@ function saveDocument() {
 		$data = $_POST['TextArea_' . $i];
 		$document->saveDocumentSection($docid, $i, $permname, $data);
 	}
+	unset($document);
 	return print_r($_POST);
-	//return $_POST['documentName'];
 }
 
 function getDocumentSections() {
 	$document = new Document();
-	$arrResults = $document->getDocumentSections($_GET['docname']);
-	return sqlDataToArray($arrResults, 'SECTIONTEXT');
-}
-
-function getDocumentSectionsEdit() {
-	$document = new Document();
-	$arrResults = $document->getDocumentSections($_GET['docname']);
-	return sqlDataTo2dArray($arrResults, 'SECTIONTEXT', 'PERMID');
+	$data = $document->getDocumentSections($_GET['docname']);
+	unset($document);
+	return $data;
 }
 
 function getDocumentSectionCount() {
 	$document = new Document();
-	return $document->getDocumentSectionCount($$_GET['docname']);
+	$data = $document->getDocumentSectionCount($$_GET['docname']);
+	unset($document);
+	return $data;
 }
 
 if ($_GET['function'] == 'login') {
@@ -97,6 +97,7 @@ if ($_GET['function'] == 'login') {
 
 $useraccess = new UserAccess();
 $useraccess -> sessionValidation();
+unset($useraccess);
 
 if ($_GET['function'] == 'userPermissionList') {
 	echo json_encode(userPermissionList());
@@ -112,8 +113,5 @@ else if ($_GET['function'] == 'getDocumentSections') {
 }
 else if ($_GET['function'] == 'getDocumentSectionCount') {
 	echo json_encode(getDocumentSectionCount());
-}
-else if ($_GET['function'] == 'getDocumentSectionsEdit') {
-	echo json_encode(getDocumentSectionsEdit());
 }
 ?>
