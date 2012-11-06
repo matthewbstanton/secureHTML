@@ -84,10 +84,11 @@ class Database {
 
 	public function getDocumentSections($docid, $userid) {
 		$this -> connect();
-		$sql = "SELECT DD.SECTIONTEXT AS SECTIONTEXT, DD.PERMID AS PERMID
+		$sql = "SELECT DD.SECTIONTEXT AS SECTIONTEXT, PD.PERMNAME AS PERMID
 				FROM DOCUMENTDATA DD
 				INNER JOIN GROUPS G ON DD.PERMID = G.PERMID
 				INNER JOIN USERS U ON U.GROUPID = G.GROUPID
+				INNER JOIN PERMISSIONDEFINITION PD ON PD.PERMID = DD.PERMID
 				WHERE U.USERID = '$userid' AND DD.DOCUMENTID ='$docid';";
 		return mysql_query($sql);
 	}
