@@ -33,7 +33,7 @@ $permissions = $useraccess -> getPermissions();
 				$("#documentHeader_div").append("<label id='documentTitle'><h2> " + docname + " </h2></label>");
 				$.getJSON("Server/server.php?function=getDocumentSections&docname=" + docname, function(jdata) {
 					for (var i = 0; i < jdata.length; i++) {
-						$("#documentView_div").append(jdata[i]);
+						$("#documentView_div").append(jdata[0][i]);
 						$("#documentView_div").append("<br/>");
 					}
 				});
