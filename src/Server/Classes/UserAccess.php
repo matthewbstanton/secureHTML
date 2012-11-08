@@ -57,7 +57,9 @@ class UserAccess {
 		$this -> setUsername($username);
 		$this -> setPassword($password);
 
+		$this -> _db -> connect();
 		$dbpasshash = $this -> _db -> getUserPassHash($this -> _username);
+		$this -> _db -> disconnect();
 
 		if ($this -> _passhash == $dbpasshash) {
 			$this -> registerSession();
@@ -68,7 +70,11 @@ class UserAccess {
 	}
 
 	public function getPermissions() {
-		return $this -> _db -> getUserPermissions($this -> getUsername());
+		$this -> _db -> connect();
+		$permissions = $this -> _db -> getUserPermissions($this -> getUsername());
+		$this -> _db -> disconnect();
+		
+		return $permissions;
 	}
 
 	public function __destruct() {

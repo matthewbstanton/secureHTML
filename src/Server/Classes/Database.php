@@ -2,19 +2,40 @@
 class Database {
 
 	private $_config;
+	private $_link;
 
 	public function __construct() {
 		$this -> _config = new Config();
 	}
 
-	private function connect() {
+	function sqlDataToArray($data, $column) {
+		$myarray = array();
+		while ($row = mysql_fetch_assoc($data)) {
+			array_push($myarray, $row[$column]);
+		}
+		return $myarray;
+	}
+
+	function sqlDataTo2dArray($data, $column, $column2) {
+		$myarray = array();
+		$myarray2 = array();
+		while ($row = mysql_fetch_assoc($data)) {
+			array_push($myarray, $row[$column]);
+			array_push($myarray2, $row[$column2]);
+		}
+		return array($myarray, $myarray2);
+	}
+
+	public function connect() {
 		$config = $this -> _config;
-		$link = mysql_connect($config -> getHostname(), $config -> getUser(), $config -> getPassword());
-		if (!$link) {
+
+		$this -> _link = mysql_connect($config -> getHostname(), $config -> getUser(), $config -> getPassword());
+
+		if (!$this -> _link) {
 			die('Not Connected : ' . mysql_error());
 		}
 
-		$db_selected = mysql_select_db($config -> getDBName(), $link);
+		$db_selected = mysql_select_db($config -> getDBName(), $this -> _link);
 		if (!$db_selected) {
 			die('Can\'t use db : ' . mysql_error());
 		}
@@ -22,8 +43,12 @@ class Database {
 		return $db_selected;
 	}
 
+	public function disconnect() {
+		if ($this -> _link)
+			mysql_close($this -> _link);
+	}
+
 	public function getPermID($permname) {
-		$this -> connect();
 		$sql = "SELECT PERMID
 				FROM PERMISSIONDEFINITION
 				WHERE PERMNAME = '$permname'";
@@ -34,7 +59,6 @@ class Database {
 	}
 
 	private function getGroupID($groupname) {
-		$this -> connect();
 		$sql = "SELECT GROUPID
 				FROM GROUPPERMISSIONS
 				WHERE GROUPNAME = '$groupname'";
@@ -45,7 +69,6 @@ class Database {
 	}
 
 	public function getUserID($username) {
-		$this -> connect();
 		$sql = "SELECT USERID
 				FROM USERS
 				WHERE USERNAME = '$username'";
@@ -56,7 +79,6 @@ class Database {
 	}
 
 	public function getDocumentID($documentName) {
-		$this -> connect();
 		$sql = "SELECT DOCUMENTID
 				FROM DOCUMENTDEFINITION
 				WHERE DOCUMENTNAME = '$documentName'";
@@ -67,7 +89,6 @@ class Database {
 	}
 
 	public function createDocumentDefinition($name, $description, $permid) {
-		$this -> connect();
 		$sql = "INSERT INTO DOCUMENTDEFINITION (DOCUMENTNAME, DESCRIPTION, PERMID)
 				VALUES ('$name', '$description', '$permid');";
 		$result = mysql_query($sql) or die(mysql_error());
@@ -75,35 +96,36 @@ class Database {
 	}
 
 	public function InsertDocumentSection($docid, $sectionid, $permid, $data) {
-		$this -> connect();
+		$security_key = $this -> _config -> getSecurityKey();
 		$sql = "INSERT INTO DOCUMENTDATA (DOCUMENTID, SECTIONID, PERMID, SECTIONTEXT)
-				VALUES ('$docid', '$sectionid', '$permid', '$data');";
+				VALUES ('$docid', '$sectionid', '$permid', AES_ENCRYPT('$data', '$security_key'));";
 		$result = mysql_query($sql) or die(mysql_error());
 		return $sectionid;
 	}
 
 	public function UpdateDocumentSection($docid, $sectionid, $permid, $data) {
-		$this -> connect();
+		$security_key = $this -> _config -> getSecurityKey();
 		$sql = "UPDATE DOCUMENTDATA
-				SET SECTIONTEXT = '$data', PERMID = $permid
+				SET SECTIONTEXT = AES_ENCRYPT('$data', '$security_key'), PERMID = $permid
 				WHERE DOCUMENTID = $docid AND SECTIONID = $sectionid;";
 		$result = mysql_query($sql) or die(mysql_error());
 		return $sectionid;
 	}
 
 	public function getDocumentSections($docid, $userid) {
-		$this -> connect();
-		$sql = "SELECT DD.SECTIONTEXT AS SECTIONTEXT, PD.PERMNAME AS PERMID
+		$security_key = $this -> _config -> getSecurityKey();
+		$sql = "SELECT CAST(AES_DECRYPT(DD.SECTIONTEXT, '$security_key') AS CHAR CHARACTER SET utf8) AS SECTIONTEXT, PD.PERMNAME AS PERMID
 				FROM DOCUMENTDATA DD
 				INNER JOIN GROUPS G ON DD.PERMID = G.PERMID
 				INNER JOIN USERS U ON U.GROUPID = G.GROUPID
 				INNER JOIN PERMISSIONDEFINITION PD ON PD.PERMID = DD.PERMID
 				WHERE U.USERID = '$userid' AND DD.DOCUMENTID ='$docid';";
-		return mysql_query($sql);
+		$arrResults = mysql_query($sql);
+		$data = $this -> sqlDataTo2dArray($arrResults, 'SECTIONTEXT', 'PERMID');
+		return $data;
 	}
 
 	public function getDocumentSectionCount($docid, $userid) {
-		$this -> connect();
 		$sql = "SELECT COUNT(1) AS COUNT
 				FROM DOCUMENTDATA DD
 				INNER JOIN GROUPS G ON DD.PERMID = G.PERMID
@@ -115,7 +137,6 @@ class Database {
 	}
 
 	public function documentExists($docname) {
-		$this -> connect();
 		$sql = "SELECT COUNT(1) AS COUNT
 				FROM DOCUMENTDEFINITION DD
 				WHERE DD.DOCUMENTNAME = '$docname';";
@@ -125,7 +146,6 @@ class Database {
 	}
 
 	public function documentSectionExists($docid, $sectionid) {
-		$this -> connect();
 		$sql = "SELECT COUNT(1) AS COUNT
 				FROM DOCUMENTDATA DD
 				WHERE DD.DOCUMENTID = $docid AND DD.SECTIONID = $sectionid;";
@@ -135,9 +155,6 @@ class Database {
 	}
 
 	public function getUserPassHash($username) {
-
-		$this -> connect();
-
 		$sql = "SELECT PASSCODE
 				FROM USERS
 				WHERE USERNAME = '$username'";
@@ -151,7 +168,6 @@ class Database {
 		$groupid = $this -> getGroupID($groupname);
 		$permid = $this -> getPermID($permname);
 		if ($groupid != 0 and $permid != 0) {
-			$this -> connect();
 			$sql = "INSERT INTO GROUPS
 					VALUES('$groupid', '$permid');";
 
@@ -163,7 +179,6 @@ class Database {
 		$groupid = $this -> getGroupID($groupname);
 		$userid = $this -> getUserID($username);
 		if ($groupid != 0 and $userid != 0) {
-			$this -> connect();
 			$sql = "UPDATE USERS
 					SET GROUPID = '$groupid'
 					WHERE USERID = '$userid';";
@@ -173,7 +188,6 @@ class Database {
 	}
 
 	public function createPermission($permname, $readwrite) {
-		$this -> connect();
 		$sql = "INSERT INTO PERMISSIONDEFINITION (PERMNAME, ACCESS)
 				VALUES('$permname', '$readwrite');";
 
@@ -181,7 +195,6 @@ class Database {
 	}
 
 	public function createGroup($groupname) {
-		$this -> connect();
 		$sql = "INSERT INTO GROUPPERMISSIONS (GROUPNAME)
 				VALUES('$groupname');";
 
@@ -189,7 +202,6 @@ class Database {
 	}
 
 	public function retrieveDocumentList($username) {
-		$this -> connect();
 		$sql = "SELECT DD.DOCUMENTID, DD.DESCRIPTION, DD.DOCUMENTNAME
 				FROM DOCUMENTDEFINITION AS DD
 				INNER JOIN PERMISSIONDEFINITION AS PD ON PD.PERMID = DD.PERMID OR DD.PERMID = 0
@@ -202,44 +214,37 @@ class Database {
 	}
 
 	public function searchUsers($search) {
-		$this -> connect();
 		$sql = "SELECT USERNAME
 				FROM USERS
 				WHERE USERNAME LIKE '$search%';";
-
-		$result = mysql_query($sql);
-
-		return $result;
+		$arrResults = mysql_query($sql);
+		return $this -> sqlDataToArray($arrResults, 'USERNAME');
 	}
 
 	public function searchGroups($search) {
-		$this -> connect();
 		$sql = "SELECT GROUPNAME
 				FROM GROUPPERMISSIONS
 				WHERE GROUPNAME LIKE '$search%';";
-
-		$result = mysql_query($sql);
-
-		return $result;
+		$arrResults = mysql_query($sql);
+		return $this -> sqlDataToArray($arrResults, 'GROUPNAME');
 	}
 
 	public function searchPerms($search) {
-		$this -> connect();
 		$sql = "SELECT PERMNAME
 				FROM PERMISSIONDEFINITION
 				WHERE PERMNAME LIKE '$search%';";
-
-		return mysql_query($sql);
+		$arrResults = mysql_query($sql);
+		return $this -> sqlDataToArray($arrResults, 'PERMNAME');
 	}
 
 	public function getUserPermissions($username) {
-		$this -> connect();
 		$sql = "SELECT PERMNAME
 				FROM PERMISSIONDEFINITION PD
 				INNER JOIN GROUPS G ON G.PERMID = PD.PERMID
 				INNER JOIN USERS U ON U.GROUPID = G.GROUPID
 				WHERE U.USERNAME = '$username';";
-		return mysql_query($sql);
+		$results = mysql_query($sql);
+		return $this -> sqlDataToArray($results, 'PERMNAME');
 	}
 
 	public function __destruct() {

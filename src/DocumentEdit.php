@@ -12,9 +12,7 @@ $permissions = $useraccess -> getPermissions();
 		?>
 		<script src="js/jquery.js"></script>
 		<script src="js/jquery.validate.js"</script>
-		<script language="JavaScript">
-			var documentSectionCount = 0;
-		</script>
+		<script type="teext/javascript"></script>
 		<script language="JavaScript">
 			function getUrlVars() {
 				var vars = [], hash;
@@ -27,64 +25,81 @@ $permissions = $useraccess -> getPermissions();
 				return vars;
 			}
 
-			function sleep(ms) {
-				var dt = new Date();
-				dt.setTime(dt.getTime() + ms);
-				while (new Date().getTime() < dt.getTime());
+			function generatePermissionBox(id, perm, permlist) {
+				$(".documentSections_div").append("<select id = 'PermissionList_" + id + "' name = 'PermissionList_" + id + "' class='PermissionList'></select>");
+				for (var i = 0; i < permlist.length; i++)
+					$("#PermissionList_" + id).append("<option value=" + permlist[i] + ">" + permlist[i] + "</option>");
+				$("#PermissionList_" + id).val(perm);
 			}
 
-			var documentSectionCount = 0;
-			var docname = getUrlVars()["docname"];
-			var docPermission = new Array();
+			function generateDocumentSection(id, perm, permlist, data) {
 
-			if (getUrlVars()["action"] == "edit") {
-				$.getJSON("Server/server.php?function=getDocumentSections&docname=" + docname, function(jdata) {
-					for (var i = 0; i < jdata.length; i++) {
-						$(".documentSections_div").append("<br/>");
-						$(".documentSections_div").append("<select id = 'PermissionList_" + documentSectionCount + "' name = 'PermissionList_" + documentSectionCount + "' class='PermissionList'></select>");
-						$(".documentSections_div").append("<br/>");
-						$(".documentSections_div").append("<textarea id = 'TextArea_" + documentSectionCount + "' name = 'TextArea_" + documentSectionCount + "' class='SectionData'>" + jdata[0][i] + "</textarea>");
-						docPermission[i] = jdata[1][i];
-						documentSectionCount++;
+				$(".documentSections_div").append("<br/>");
+				generatePermissionBox(id, perm, permlist);
+				$(".documentSections_div").append("<br/>");
+				$(".documentSections_div").append("<textarea id = 'TextArea_" + id + "' name = 'TextArea_" + id + "' class='SectionData'>" + data + "</textarea>");
+				$.sectionCount++;
+			}
+
+			//callback function
+			function generateDocument() {
+				//if both json threads are complete, we can move forward.  Else we are waiting for 1 or more threads to complete.
+				if ($.callback_json_getDocumentSections.complete && $.callback_json_getPermissionSections.complete) {
+					documentSections = $.callback_json_getDocumentSections.data;
+					permlist = $.callback_json_getPermissionSections.data;
+					for (var i = 0; i < documentSections[0].length; i++) {
+						generateDocumentSection(i, documentSections[1][i], permlist, documentSections[0][i]);
 					}
-				});
-				//json start
+				}
+			}
+
+			function getUserPermissions() {
+				$.callback_json_getPermissionSections.complete = false;
 				$.getJSON("Server/server.php?function=userPermissionList", function(permData) {
-					//alert(permData);
-					for (var i = 0; i < documentSectionCount; i++) {
-						for (var j = 0; j < permData.length; j++) {
-							$("#PermissionList_" + i).append("<option value=" + permData[j] + ">" + permData[j] + "</option>");
-						}
-						$("#PermissionList_" + i).val(docPermission[i]);
-					}
+					$.callback_json_getPermissionSections.data = permData;
+					$.callback_json_getPermissionSections.complete = true;
+					generateDocument();
 				});
-				//End json
 			}
+
+			function getDocumentSections(_docname) {
+				$.getJSON("Server/server.php?function=getDocumentSections&docname=" + _docname, function(jdata) {
+					$.callback_json_getDocumentSections.complete = false;
+					$.callback_json_getDocumentSections.data = jdata;
+					$.callback_json_getDocumentSections.complete = true;
+					generateDocument();
+				});
+			}
+
 
 			$(document).ready(function() {
+				//Global variables, to be set when callback from json is complete
+				$.callback_json_getDocumentSections = {}
+				$.callback_json_getPermissionSections = {}
+				$.sectionCount = 0;
+
+				var documentSectionCount = 0;
+				var docname = getUrlVars()["docname"];
+				var documentSections = new Array();
+				
+				//Load permissions to be used in other places
+				$.callback_json_getPermissionSections.complete = false;
+				getUserPermissions();
+
+				if (getUrlVars()["action"] == "edit") {
+					$('#documentNameID').val(docname);
+					$("#documentNameID").attr("disabled", "disabled");
+					$.callback_json_getDocumentSections.complete = false;
+					getDocumentSections(docname);
+				}
+
 				$("#addDocumentSection").click(function() {
-
-					$(".documentSections_div").append("<br/>");
-					$(".documentSections_div").append("<select id = 'PermissionList_" + documentSectionCount + "' name = 'PermissionList_" + documentSectionCount + "' class='PermissionList'></select>");
-					$(".documentSections_div").append("<br/>");
-					$(".documentSections_div").append("<textarea id = 'TextArea_" + documentSectionCount + "' name = 'TextArea_" + documentSectionCount + "' class='SectionData'></textarea>");
-
-					//json start
-					$.getJSON("Server/server.php?function=userPermissionList", function(jdata) {
-						for (var i = 0; i < jdata.length; i++)
-							$("#PermissionList_" + documentSectionCount).append("<option value=" + jdata[i] + ">" + jdata[i] + "</option>");
-
-						documentSectionCount++;
-					});
-					//End json
+					generateDocumentSection($.sectionCount, $.callback_json_getPermissionSections[0], $.callback_json_getPermissionSections.data, "");
 				});
-
-				sleep(1000);
 
 				$("#docSections").validate({
 					submitHandler : function(form) {
-						// do other stuff for a valid form
-						$.post('Server/server.php?function=saveDocument&count=' + documentSectionCount, $("#docSections").serialize(), function(data) {
+						$.post('Server/server.php?function=saveDocument&count=' + $.sectionCount, $("#docSections").serialize(), function(data) {
 							alert(data);
 						});
 					}
@@ -103,11 +118,13 @@ $permissions = $useraccess -> getPermissions();
 				</button>
 			</div>
 			<form name="docSections" id="docSections" method="post">
-				<input type="text" name="documentName">
+				<input type="text" id="documentNameID" name="documentName">
+				</input>
 				<div class="documentSections_div">
 
 				</div>
 				<input type="submit" name="save" value="Save">
+				</input>
 			</form>
 		</fieldset>
 

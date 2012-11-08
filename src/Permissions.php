@@ -1,6 +1,7 @@
 <?php
 	include_once "Header.php";
 	$_db = new Database();
+	$_db -> connect();
 	$_db->searchUsers('A');
 		if(session_id() == '') {
 		session_start();
@@ -26,6 +27,9 @@
 			$_db->addGroupToUser($groupname, $username);
 		}
 	}
+	
+	$_db -> disconnect();
+	unset($_db);
 ?>
 <!DOCTYPE html>
 <html>

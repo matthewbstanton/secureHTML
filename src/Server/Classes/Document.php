@@ -35,42 +35,59 @@ Class Document {
 	}
 
 	public function saveDocumentSection($docid, $sectionid, $permname, $data) {
+		$this -> _db -> connect();
 		$permid = $this -> _db -> getPermID($permname);
-		$encrypted_data = $this -> _security -> encrypt($data);
 		if ($this -> _db -> documentSectionExists($docid, $sectionid) > 0)
-			return $this -> _db -> UpdateDocumentSection($docid, $sectionid, $permid, $encrypted_data);
+			$returncode = $this -> _db -> UpdateDocumentSection($docid, $sectionid, $permid, $data);
 		else
-			return $this -> _db -> InsertDocumentSection($docid, $sectionid, $permid, $encrypted_data);
+			$returncode = $this -> _db -> InsertDocumentSection($docid, $sectionid, $permid, $data);
+		$this -> _db -> disconnect();
+
+		return $returncode;
 	}
 
 	public function getDocumentSections($docname) {
 		$username = $this -> _useraccess -> getUsername();
+
+		$this -> _db -> connect();
 		$userid = $this -> _db -> getUserID($username);
 		$docid = $this -> _db -> getDocumentID($docname);
-
-		$arrResults = $this -> _db -> getDocumentSections($docid, $userid);
-		$data = sqlDataTo2dArray($arrResults, 'SECTIONTEXT', 'PERMID');
-		$decrypted_data = $this -> decryptData($data);
-		return $decrypted_data;
+		$data = $this -> _db -> getDocumentSections($docid, $userid);
+		$this -> _db -> disconnect();
+		return $data;
 	}
 
 	public function getDocumentSectionCount($docname) {
 		$username = $this -> _useraccess -> getUsername();
+
+		$this -> _db -> connect();
 		$userid = $this -> _db -> getUserID($username);
 		$docid = $this -> _db -> getDocumentID($docname);
-		return $this -> _db -> getDocumentSectionCount($docid, $userid);
+		$count = $this -> _db -> getDocumentSectionCount($docid, $userid);
+		$this -> _db -> disconnect();
+
+		return $count;
 	}
 
 	public function createDocumentDefinition($docname, $description, $permid) {
+		$this -> _db -> connect();
 		$docexists = $this -> _db -> documentExists($docname);
+		return $docexists;
 		if ($docexists > 0)
-			return $this -> _db -> getDocumentID($docname);
+			$returncode = $this -> _db -> getDocumentID($docname);
 		else
-			return $this -> _db -> createDocumentDefinition($docname, $description, $permid);
+			$returncode = $this -> _db -> createDocumentDefinition($docname, $description, $permid);
+		$this -> _db -> disconnect();
+
+		return $returncode;
 	}
 
 	public function getDocumentList($username) {
-		return $this -> _db -> retrieveDocumentList($username);
+		$this -> _db -> connect();
+		$list = $this -> _db -> retrieveDocumentList($username);
+		$this -> _db -> disconnect();
+
+		return $list;
 	}
 
 	public function __destruct() {

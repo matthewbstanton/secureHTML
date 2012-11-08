@@ -5,22 +5,21 @@ function __autoload($class_name) {
 
 function login() {
 	$config = new Config();
-	$loginpage = $config->getLoginPage();
-	$welcomepage = $config->getWelcomePage();
+	$loginpage = $config -> getLoginPage();
+	$welcomepage = $config -> getWelcomePage();
 	unset($config);
-	if(session_id() == '') {
+	if (session_id() == '') {
 		session_start();
 	}
-	if($_SERVER["REQUEST_METHOD"] == "POST") {
+	if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		$username = $_POST['username'];
 		$password = $_POST['password'];
 		$useraccess = new UserAccess();
-		$login = $useraccess->login($username, $password);
-		
+		$login = $useraccess -> login($username, $password);
+
 		if ($login == False) {
 			header("location: " . $loginpage);
-		}
-		else {
+		} else {
 			header("location: " . $welcomepage);
 		}
 	}
@@ -46,32 +45,36 @@ function sqlDataTo2dArray($data, $column, $column2) {
 
 function userPermissionList() {
 	$useraccess = new UserAccess();
-	$arrResults = $useraccess -> getPermissions();
+	$results = $useraccess -> getPermissions();
 	unset($useraccess);
-	return sqlDataToArray($arrResults, 'PERMNAME');
+	return $results;
 }
 
 function autoComplete($term, $column) {
 	$db = new Database();
+	$db -> connect();
 	$mySqlSearchSring = mysql_real_escape_string($term);
 	if ($column == 'PERMNAME')
-		$arrResults = $db->searchPerms($mySqlSearchSring);
+		$results = $db -> searchPerms($mySqlSearchSring);
 	else if ($column == 'GROUPNAME')
-		$arrResults = $db->searchGroups($mySqlSearchSring);
+		$results = $db -> searchGroups($mySqlSearchSring);
 	else if ($column == 'USERNAME')
-		$arrResults = $db->searchUsers($mySqlSearchSring);
+		$results = $db -> searchUsers($mySqlSearchSring);
+	$db -> disconnect();
+	//$results = sqlDataToArray($arrResults, $column);
 	unset($db);
-	return sqlDataToArray($arrResults, $column);
+	return $results;
 }
 
 function saveDocument() {
 	$sectionCount = $_GET['count'];
 	$document = new Document();
-	$docid = $document->createDocumentDefinition($_POST['documentName'], 'DESCRIPTION', 0);
-	for ($i=0; $i<$sectionCount; $i++) {
+	$docid = $document -> createDocumentDefinition($_POST['documentName'], 'DESCRIPTION', 0);
+
+	for ($i = 0; $i < $sectionCount; $i++) {
 		$permname = $_POST['PermissionList_' . $i];
 		$data = $_POST['TextArea_' . $i];
-		$document->saveDocumentSection($docid, $i, $permname, $data);
+		$document -> saveDocumentSection($docid, $i, $permname, $data);
 	}
 	unset($document);
 	return print_r($_POST);
@@ -79,14 +82,14 @@ function saveDocument() {
 
 function getDocumentSections() {
 	$document = new Document();
-	$data = $document->getDocumentSections($_GET['docname']);
+	$data = $document -> getDocumentSections($_GET['docname']);
 	unset($document);
 	return $data;
 }
 
 function getDocumentSectionCount() {
 	$document = new Document();
-	$data = $document->getDocumentSectionCount($$_GET['docname']);
+	$data = $document -> getDocumentSectionCount($$_GET['docname']);
 	unset($document);
 	return $data;
 }
@@ -101,17 +104,13 @@ unset($useraccess);
 
 if ($_GET['function'] == 'userPermissionList') {
 	echo json_encode(userPermissionList());
-}
-else if ($_GET['function'] == 'autoComplete') {
-	echo json_encode(autoComplete($_REQUEST['term'], $_GET['param1'])); 
-}
-else if ($_GET['function'] == 'saveDocument') {
+} else if ($_GET['function'] == 'autoComplete') {
+	echo json_encode(autoComplete($_REQUEST['term'], $_GET['param1']));
+} else if ($_GET['function'] == 'saveDocument') {
 	echo json_encode(saveDocument());
-}
-else if ($_GET['function'] == 'getDocumentSections') {
+} else if ($_GET['function'] == 'getDocumentSections') {
 	echo json_encode(getDocumentSections());
-}
-else if ($_GET['function'] == 'getDocumentSectionCount') {
+} else if ($_GET['function'] == 'getDocumentSectionCount') {
 	echo json_encode(getDocumentSectionCount());
 }
 ?>
