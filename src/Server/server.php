@@ -25,24 +25,6 @@ function login() {
 	}
 }
 
-function sqlDataToArray($data, $column) {
-	$myarray = array();
-	while ($row = mysql_fetch_assoc($data)) {
-		array_push($myarray, $row[$column]);
-	}
-	return $myarray;
-}
-
-function sqlDataTo2dArray($data, $column, $column2) {
-	$myarray = array();
-	$myarray2 = array();
-	while ($row = mysql_fetch_assoc($data)) {
-		array_push($myarray, $row[$column]);
-		array_push($myarray2, $row[$column2]);
-	}
-	return array($myarray, $myarray2);
-}
-
 function userPermissionList() {
 	$useraccess = new UserAccess();
 	$results = $useraccess -> getPermissions();
@@ -61,7 +43,6 @@ function autoComplete($term, $column) {
 	else if ($column == 'USERNAME')
 		$results = $db -> searchUsers($mySqlSearchSring);
 	$db -> disconnect();
-	//$results = sqlDataToArray($arrResults, $column);
 	unset($db);
 	return $results;
 }

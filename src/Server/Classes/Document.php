@@ -8,24 +8,6 @@ Class Document {
 		$this -> _security = new Security();
 	}
 
-	function sqlDataToArray($data, $column) {
-		$myarray = array();
-		while ($row = mysql_fetch_assoc($data)) {
-			array_push($myarray, $row[$column]);
-		}
-		return $myarray;
-	}
-
-	function sqlDataTo2dArray($data, $column, $column2) {
-		$myarray = array();
-		$myarray2 = array();
-		while ($row = mysql_fetch_assoc($data)) {
-			array_push($myarray, $row[$column]);
-			array_push($myarray2, $row[$column2]);
-		}
-		return array($myarray, $myarray2);
-	}
-
 	public function decryptData($data) {
 		$count = count($data[0]);
 		for ($i = 0; $i < $count; $i++) {
@@ -50,29 +32,33 @@ Class Document {
 		$username = $this -> _useraccess -> getUsername();
 
 		$this -> _db -> connect();
-		$userid = $this -> _db -> getUserID($username);
-		$docid = $this -> _db -> getDocumentID($docname);
-		$data = $this -> _db -> getDocumentSections($docid, $userid);
-		$this -> _db -> disconnect();
-		return $data;
+		if ($this -> _db -> documentExists($docname) > 0) {
+			$userid = $this -> _db -> getUserID($username);
+			$docid = $this -> _db -> getDocumentID($docname);
+			$data = $this -> _db -> getDocumentSections($docid, $userid);
+			$this -> _db -> disconnect();
+			return $data;
+		}
 	}
 
 	public function getDocumentSectionCount($docname) {
 		$username = $this -> _useraccess -> getUsername();
 
 		$this -> _db -> connect();
-		$userid = $this -> _db -> getUserID($username);
-		$docid = $this -> _db -> getDocumentID($docname);
-		$count = $this -> _db -> getDocumentSectionCount($docid, $userid);
-		$this -> _db -> disconnect();
+		if ($this -> _db -> documentExists($docname) > 0) {
+			$userid = $this -> _db -> getUserID($username);
+			$docid = $this -> _db -> getDocumentID($docname);
+			$count = $this -> _db -> getDocumentSectionCount($docid, $userid);
+			$this -> _db -> disconnect();
 
-		return $count;
+			return $count;
+		}
 	}
 
 	public function createDocumentDefinition($docname, $description, $permid) {
 		$this -> _db -> connect();
 		$docexists = $this -> _db -> documentExists($docname);
-		
+
 		if ($docexists > 0)
 			$returncode = $this -> _db -> getDocumentID($docname);
 		else
