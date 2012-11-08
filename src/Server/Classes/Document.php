@@ -72,7 +72,7 @@ Class Document {
 	public function createDocumentDefinition($docname, $description, $permid) {
 		$this -> _db -> connect();
 		$docexists = $this -> _db -> documentExists($docname);
-		return $docexists;
+		
 		if ($docexists > 0)
 			$returncode = $this -> _db -> getDocumentID($docname);
 		else
