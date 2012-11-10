@@ -14,7 +14,7 @@ class Database {
 		while ($row = mysql_fetch_assoc($data)) {
 			array_push($myarray, $row[$column]);
 		}
-		return array_map("uft8_encode", $myarray);
+		return array_map('utf8_encode', $myarray);
 	}
 
 	function sqlDataTo2dArray($data, $column, $column2) {
@@ -24,7 +24,7 @@ class Database {
 			array_push($myarray, $row[$column]);
 			array_push($myarray2, $row[$column2]);
 		}
-		return array(array_map("uft8_encode", $myarray), array_map("uft8_encode", $myarray2));
+		return array(array_map('uft8_encode', $myarray), array_map('uft8_encode', $myarray2));
 	}
 
 	function sqlDataTo3dArray($data, $column, $column2, $column3) {
@@ -36,7 +36,7 @@ class Database {
 			array_push($myarray2, $row[$column2]);
 			array_push($myarray3, $row[$column3]);
 		}
-		return array(array_map("uft8_encode", $myarray), array_map("uft8_encode", $myarray2), array_map("uft8_encode", $myarray3));
+		return array(array_map('uft8_encode', $myarray), array_map('uft8_encode', $myarray2), array_map('uft8_encode', $myarray3));
 	}
 
 	public function connect() {
