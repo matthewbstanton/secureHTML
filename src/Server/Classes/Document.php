@@ -19,7 +19,7 @@ Class Document {
 	public function saveDocumentSection($docid, $sectionid, $permname, $data) {
 		$this -> _db -> connect();
 		$permid = $this -> _db -> getPermID($permname);
-		
+
 		if ($docid == null || $docid < 0)
 			return -1;
 		if ($sectionid == null || $sectionid < 0)
@@ -30,17 +30,18 @@ Class Document {
 			return -1;
 		if ($permid == null || $permid < 0)
 			return -1;
-		
-		/*can user write to this section?*/
-		$username = $this -> _useraccess -> getUsername();
-		$userid = $this -> _db -> getUserID($username);
-		if ($this-> _db -> documentSectionAccess($docid, $sectionid, $userid) <= 0)
-			return -1;
-		
-		if ($this -> _db -> documentSectionExists($docid, $sectionid) > 0)
-			$returncode = $this -> _db -> UpdateDocumentSection($docid, $sectionid, $permid, $data);
-		else
+
+		if ($this -> _db -> documentSectionExists($docid, $sectionid) > 0) {
+			/*can user write to this section?*/
+			$username = $this -> _useraccess -> getUsername();
+			$userid = $this -> _db -> getUserID($username);
+			if ($this -> _db -> documentSectionAccess($docid, $sectionid, $userid) <= 0)
+				return -1;
+			else
+				$returncode = $this -> _db -> UpdateDocumentSection($docid, $sectionid, $permid, $data);
+		} else {
 			$returncode = $this -> _db -> InsertDocumentSection($docid, $sectionid, $permid, $data);
+		}
 		$this -> _db -> disconnect();
 
 		return $returncode;
