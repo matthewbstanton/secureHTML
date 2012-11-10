@@ -19,10 +19,22 @@ Class Document {
 	public function saveDocumentSection($docid, $sectionid, $permname, $data) {
 		$this -> _db -> connect();
 		$permid = $this -> _db -> getPermID($permname);
+		
+		if ($docid == null || $docid < 0)
+			return -1;
+		if ($sectionid == null || $sectionid < 0)
+			return -1;
+		if ($permname == null || $permname == '')
+			return -1;
+		if ($data == null)
+			return -1;
+		if ($permid == null || $permid < 0)
+			return -1;
+		
 		if ($this -> _db -> documentSectionExists($docid, $sectionid) > 0)
-			$returncode = $this -> _db -> UpdateDocumentSection($docid, $sectionid, $permid, $data);
+			$returncode = $this -> _db -> UpdateDocumentSection($docid, $sectionid, $permid, mysql_real_escape_string($data));
 		else
-			$returncode = $this -> _db -> InsertDocumentSection($docid, $sectionid, $permid, $data);
+			$returncode = $this -> _db -> InsertDocumentSection($docid, $sectionid, $permid, mysql_real_escape_string($data));
 		$this -> _db -> disconnect();
 
 		return $returncode;

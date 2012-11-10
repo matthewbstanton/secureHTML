@@ -31,10 +31,17 @@ $permissions = $useraccess -> getPermissions();
 					$("#PermissionList_" + id).append("<option value=" + permlist[i] + ">" + permlist[i] + "</option>");
 				$("#PermissionList_" + id).val(perm);
 			}
+			
+			function generateSectionIDBox(id, sectionid) {
+				$(".documentSections_div").append("<input type='text' id='Section_" + id + "' name='Section_" + id + "'></input>");
+				$('#Section_'+id).val(sectionid);
+				$(".documentSections_div").append("<br/>");
+			}
 
-			function generateDocumentSection(id, perm, permlist, data) {
+			function generateDocumentSection(id, perm, permlist, data, sectionid) {
 
 				$(".documentSections_div").append("<br/>");
+				generateSectionIDBox(id, sectionid);
 				generatePermissionBox(id, perm, permlist);
 				$(".documentSections_div").append("<br/>");
 				$(".documentSections_div").append("<textarea id = 'TextArea_" + id + "' name = 'TextArea_" + id + "' class='SectionData'>" + data + "</textarea>");
@@ -50,8 +57,7 @@ $permissions = $useraccess -> getPermissions();
 						return;
 					permlist = $.callback_json_getPermissionSections.data;
 					for (var i = 0; i < documentSections[0].length; i++) {
-						alert(documentSections);
-						generateDocumentSection(i, documentSections[1][i], permlist, documentSections[0][i]);
+						generateDocumentSection(i, documentSections[1][i], permlist, documentSections[0][i], documentSections[2][i]);
 					}
 				}
 			}

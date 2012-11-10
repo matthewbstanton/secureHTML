@@ -55,7 +55,8 @@ function saveDocument() {
 	for ($i = 0; $i < $sectionCount; $i++) {
 		$permname = $_POST['PermissionList_' . $i];
 		$data = $_POST['TextArea_' . $i];
-		$document -> saveDocumentSection($docid, $i, $permname, $data);
+		$sectionid = $_POST['Section_' . $i];
+		$document -> saveDocumentSection($docid, $sectionid, $permname, $data);
 	}
 	unset($document);
 	return print_r($_POST);

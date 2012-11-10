@@ -139,7 +139,8 @@ class Database {
 				INNER JOIN GROUPS G ON DD.PERMID = G.PERMID
 				INNER JOIN USERS U ON U.GROUPID = G.GROUPID
 				INNER JOIN PERMISSIONDEFINITION PD ON PD.PERMID = DD.PERMID
-				WHERE U.USERID = '$userid' AND DD.DOCUMENTID ='$docid';";
+				WHERE U.USERID = '$userid' AND DD.DOCUMENTID ='$docid'
+				ORDER BY DD.SECTIONID;";
 		$arrResults = $this -> executeSQL($sql);
 		$data = $this -> sqlDataTo3dArray($arrResults, 'SECTIONTEXT', 'PERMID', 'SECTIONID');
 		return $data;
@@ -224,13 +225,15 @@ class Database {
 	public function retrieveDocumentList($username) {
 		$sql = "SELECT DD.DOCUMENTID, DD.DESCRIPTION, DD.DOCUMENTNAME
 				FROM DOCUMENTDEFINITION AS DD
-				INNER JOIN PERMISSIONDEFINITION AS PD ON PD.PERMID = DD.PERMID OR DD.PERMID = 0
-				INNER JOIN GROUPS AS G ON G.PERMID = PD.PERMID
-				INNER JOIN GROUPPERMISSIONS AS GP ON GP.GROUPID = G.GROUPID
-				INNER JOIN USERS AS U ON U.GROUPID = GP.GROUPID
-				WHERE U.USERNAME = '$username';";
+				WHERE DD.PERMID = 0
+				OR DD.PERMID IN (
+				    SELECT PD.PERMID
+				    FROM PERMISSIONDEFINITION PD
+				    INNER JOIN GROUPS G ON PD.PERMID = G.PERMID
+				    INNER JOIN USERS U ON U.GROUPID = G.GROUPID
+				    WHERE U.USERNAME = '$username')";
 
-		$this -> executeSQL($sql);
+		return $this -> executeSQL($sql);
 	}
 
 	public function searchUsers($search) {
