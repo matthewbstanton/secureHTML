@@ -70,7 +70,7 @@ function getDocumentSections() {
 
 function getDocumentSectionCount() {
 	$document = new Document();
-	$data = $document -> getDocumentSectionCount($$_GET['docname']);
+	$data = $document -> getDocumentSectionCount($_GET['docname']);
 	unset($document);
 	return $data;
 }

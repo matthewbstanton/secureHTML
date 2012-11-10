@@ -46,8 +46,11 @@ $permissions = $useraccess -> getPermissions();
 				//if both json threads are complete, we can move forward.  Else we are waiting for 1 or more threads to complete.
 				if ($.callback_json_getDocumentSections.complete && $.callback_json_getPermissionSections.complete) {
 					documentSections = $.callback_json_getDocumentSections.data;
+					if (documentSections == null)
+						return;
 					permlist = $.callback_json_getPermissionSections.data;
 					for (var i = 0; i < documentSections[0].length; i++) {
+						alert(documentSections);
 						generateDocumentSection(i, documentSections[1][i], permlist, documentSections[0][i]);
 					}
 				}
@@ -99,8 +102,10 @@ $permissions = $useraccess -> getPermissions();
 
 				$("#docSections").validate({
 					submitHandler : function(form) {
+					$("#documentNameID").attr("disabled", false);
 						$.post('Server/server.php?function=saveDocument&count=' + $.sectionCount, $("#docSections").serialize(), function(data) {
-							alert(data);
+							alert("Saved to DB");
+							$("#documentNameID").attr("disabled", "disabled");
 						});
 					}
 				});
