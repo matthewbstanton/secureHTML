@@ -31,6 +31,12 @@ Class Document {
 		if ($permid == null || $permid < 0)
 			return -1;
 		
+		/*can user write to this section?*/
+		$username = $this -> _useraccess -> getUsername();
+		$userid = $this -> _db -> getUserID($username);
+		if ($this-> _db -> documentSectionAccess($docid, $sectionid, $userid) <= 0)
+			return -1;
+		
 		if ($this -> _db -> documentSectionExists($docid, $sectionid) > 0)
 			$returncode = $this -> _db -> UpdateDocumentSection($docid, $sectionid, $permid, $data);
 		else

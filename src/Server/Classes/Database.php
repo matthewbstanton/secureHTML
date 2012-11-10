@@ -14,7 +14,7 @@ class Database {
 		while ($row = mysql_fetch_assoc($data)) {
 			array_push($myarray, $row[$column]);
 		}
-		return array_map(utf8_encode, $myarray);
+		return array_map("uft8_encode", $myarray);
 	}
 
 	function sqlDataTo2dArray($data, $column, $column2) {
@@ -24,7 +24,7 @@ class Database {
 			array_push($myarray, $row[$column]);
 			array_push($myarray2, $row[$column2]);
 		}
-		return array(array_map(utf8_encode, $myarray), array_map(utf8_encode, $myarray2));
+		return array(array_map("uft8_encode", $myarray), array_map("uft8_encode", $myarray2));
 	}
 
 	function sqlDataTo3dArray($data, $column, $column2, $column3) {
@@ -36,7 +36,7 @@ class Database {
 			array_push($myarray2, $row[$column2]);
 			array_push($myarray3, $row[$column3]);
 		}
-		return array(array_map(utf8_encode, $myarray), array_map(utf8_encode, $myarray2), array_map(utf8_encode, $myarray3));
+		return array(array_map("uft8_encode", $myarray), array_map("uft8_encode", $myarray2), array_map("uft8_encode", $myarray3));
 	}
 
 	public function connect() {
@@ -55,7 +55,7 @@ class Database {
 
 		return $db_selected;
 	}
-	
+
 	public function executeSQL($sql) {
 		mysql_query('SET CHARACTER SET utf8');
 		$this -> _log -> logSQL($sql);
@@ -122,14 +122,14 @@ class Database {
 		$security_key = $this -> _config -> getSecurityKey();
 		$data = mysql_real_escape_string($data);
 		$sql = "INSERT INTO DOCUMENTDATA (DOCUMENTID, SECTIONID, PERMID, SECTIONTEXT)
-				VALUES ('$docid', '$sectionid', '$permid', AES_ENCRYPT('$data', '$security_key'));";				
+				VALUES ('$docid', '$sectionid', '$permid', AES_ENCRYPT('$data', '$security_key'));";
 		$result = $this -> executeSQL($sql);
 		return $sectionid;
 	}
 
 	public function UpdateDocumentSection($docid, $sectionid, $permid, $data) {
 		$security_key = $this -> _config -> getSecurityKey();
-		
+
 		$data = mysql_real_escape_string($data);
 		$sql = "UPDATE DOCUMENTDATA
 				SET PERMID = $permid,
@@ -152,10 +152,21 @@ class Database {
 				ORDER BY DD.SECTIONID;";
 		$arrResults = $this -> executeSQL($sql);
 		$data = $this -> sqlDataTo3dArray($arrResults, 'SECTIONTEXT', 'PERMID', 'SECTIONID');
-		
-		//echo htmlentities($data[0][0], , "UTF-8");
-		
+
 		return $data;
+	}
+
+	public function documentSectionAccess($docid, $sectionid, $userid) {
+		$sql = "SELECT COUNT(1) AS COUNT
+				FROM DOCUMENTDATA DD
+				INNER JOIN GROUPS G ON DD.PERMID = G.PERMID
+				INNER JOIN USERS U ON U.GROUPID = G.GROUPID
+				INNER JOIN PERMISSIONDEFINITION PD ON PD.PERMID = DD.PERMID
+				WHERE U.USERID = '$userid' AND DD.DOCUMENTID ='$docid'
+				AND DD.SECTIONID = $sectionid;";
+		$result = $this -> executeSQL($sql);
+		$row = mysql_fetch_array($result);
+		return $row['COUNT'];
 	}
 
 	public function getDocumentSectionCount($docid, $userid) {
