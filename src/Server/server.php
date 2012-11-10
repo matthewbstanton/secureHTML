@@ -66,6 +66,7 @@ function getDocumentSections() {
 	$document = new Document();
 	$data = $document -> getDocumentSections($_GET['docname']);
 	unset($document);
+	//return array_map(utf8_encode, $data);
 	return $data;
 }
 

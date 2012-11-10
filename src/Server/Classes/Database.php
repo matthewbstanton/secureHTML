@@ -14,7 +14,7 @@ class Database {
 		while ($row = mysql_fetch_assoc($data)) {
 			array_push($myarray, $row[$column]);
 		}
-		return $myarray;
+		return array_map(utf8_encode, $myarray);
 	}
 
 	function sqlDataTo2dArray($data, $column, $column2) {
@@ -24,7 +24,7 @@ class Database {
 			array_push($myarray, $row[$column]);
 			array_push($myarray2, $row[$column2]);
 		}
-		return array($myarray, $myarray2);
+		return array(array_map(utf8_encode, $myarray), array_map(utf8_encode, $myarray2));
 	}
 
 	function sqlDataTo3dArray($data, $column, $column2, $column3) {
@@ -36,7 +36,7 @@ class Database {
 			array_push($myarray2, $row[$column2]);
 			array_push($myarray3, $row[$column3]);
 		}
-		return array($myarray, $myarray2, $myarray3);
+		return array(array_map(utf8_encode, $myarray), array_map(utf8_encode, $myarray2), array_map(utf8_encode, $myarray3));
 	}
 
 	public function connect() {
@@ -57,8 +57,13 @@ class Database {
 	}
 	
 	public function executeSQL($sql) {
+		mysql_query('SET CHARACTER SET utf8');
 		$this -> _log -> logSQL($sql);
-		return mysql_query($sql);	
+		$results = mysql_query($sql);
+		if (!$results) {
+			$this -> _log -> logError('Invalid query: ' . mysql_error());
+		}
+		return $results;
 	}
 
 	public function disconnect() {
@@ -115,6 +120,7 @@ class Database {
 
 	public function InsertDocumentSection($docid, $sectionid, $permid, $data) {
 		$security_key = $this -> _config -> getSecurityKey();
+		$data = mysql_real_escape_string($data);
 		$sql = "INSERT INTO DOCUMENTDATA (DOCUMENTID, SECTIONID, PERMID, SECTIONTEXT)
 				VALUES ('$docid', '$sectionid', '$permid', AES_ENCRYPT('$data', '$security_key'));";				
 		$result = $this -> executeSQL($sql);
@@ -123,8 +129,11 @@ class Database {
 
 	public function UpdateDocumentSection($docid, $sectionid, $permid, $data) {
 		$security_key = $this -> _config -> getSecurityKey();
+		
+		$data = mysql_real_escape_string($data);
 		$sql = "UPDATE DOCUMENTDATA
-				SET SECTIONTEXT = AES_ENCRYPT('$data', '$security_key'), PERMID = $permid
+				SET PERMID = $permid,
+				SECTIONTEXT = AES_ENCRYPT('$data', '$security_key')
 				WHERE DOCUMENTID = $docid AND SECTIONID = $sectionid;";
 		$result = $this -> executeSQL($sql);
 		return $sectionid;
@@ -143,6 +152,9 @@ class Database {
 				ORDER BY DD.SECTIONID;";
 		$arrResults = $this -> executeSQL($sql);
 		$data = $this -> sqlDataTo3dArray($arrResults, 'SECTIONTEXT', 'PERMID', 'SECTIONID');
+		
+		//echo htmlentities($data[0][0], , "UTF-8");
+		
 		return $data;
 	}
 

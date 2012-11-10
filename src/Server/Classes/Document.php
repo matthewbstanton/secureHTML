@@ -32,9 +32,9 @@ Class Document {
 			return -1;
 		
 		if ($this -> _db -> documentSectionExists($docid, $sectionid) > 0)
-			$returncode = $this -> _db -> UpdateDocumentSection($docid, $sectionid, $permid, mysql_real_escape_string($data));
+			$returncode = $this -> _db -> UpdateDocumentSection($docid, $sectionid, $permid, $data);
 		else
-			$returncode = $this -> _db -> InsertDocumentSection($docid, $sectionid, $permid, mysql_real_escape_string($data));
+			$returncode = $this -> _db -> InsertDocumentSection($docid, $sectionid, $permid, $data);
 		$this -> _db -> disconnect();
 
 		return $returncode;
