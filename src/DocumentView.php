@@ -23,7 +23,6 @@ $permissions = $useraccess -> getPermissions();
 				}
 				return vars;
 			}
-			//alert("In the ready() function");
 			//document ready function
 			$(document).ready(function() {
 				
@@ -32,7 +31,7 @@ $permissions = $useraccess -> getPermissions();
 				var docname = getUrlVars()["docname"];
 				$("#documentHeader_div").append("<label id='documentTitle'><h2> " + docname + " </h2></label>");
 				$.getJSON("Server/server.php?function=getDocumentSections&docname=" + docname, function(jdata) {
-					for (var i = 0; i < jdata.length; i++) {
+					for (var i = 0; i < jdata[0].length; i++) {
 						$("#documentView_div").append(jdata[0][i]);
 						$("#documentView_div").append("<br/>");
 					}
