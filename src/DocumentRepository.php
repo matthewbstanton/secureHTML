@@ -11,7 +11,7 @@
 		}
 		while ($row = mysql_fetch_assoc($list)) {
 			echo '<tr>';
-			echo '<td><input type="radio" name="document" value="'.$row["DOCUMENTID"].'"></td>';
+			echo '<td><input type="radio" name="docname" value="'.$row["DOCUMENTNAME"].'"></td>';
 			echo '<td>'.$row["DOCUMENTNAME"].'</td>';
 			echo '<td>'.$row["DESCRIPTION"].'</td>';
 			echo '</tr>';
@@ -27,7 +27,8 @@
 		<h1>Document Repository</h1>
 		<fieldset>
 		<legend><b>Select the document you want to view<b></legend>
-		<form action="DocumentEdit.php?action=edit&docname=matttest10" method="POST">
+		<form action="DocumentEdit.php" method="GET">
+			<input type="hidden" name="action" value ="edit"/>
 			<table id="documentList" border="1" width="95%">
 				<tr bgcolor="#aaaaaa">
 					<th width="5%"></th>
