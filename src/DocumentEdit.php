@@ -12,7 +12,7 @@ $permissions = $useraccess -> getPermissions();
 		?>
 		<script src="js/jquery.js"></script>
 		<script src="js/jquery.validate.js"</script>
-		<script type="teext/javascript"></script>
+		<script type="text/javascript"></script>
 		<link rel="stylesheet" type="text/css" href="css/site.css" />
 		<script language="JavaScript">
 			function getUrlVars() {

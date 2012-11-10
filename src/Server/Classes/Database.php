@@ -24,7 +24,7 @@ class Database {
 			array_push($myarray, $row[$column]);
 			array_push($myarray2, $row[$column2]);
 		}
-		return array(array_map('uft8_encode', $myarray), array_map('uft8_encode', $myarray2));
+		return array(array_map('utf8_encode', $myarray), array_map('utf8_encode', $myarray2));
 	}
 
 	function sqlDataTo3dArray($data, $column, $column2, $column3) {
@@ -36,7 +36,21 @@ class Database {
 			array_push($myarray2, $row[$column2]);
 			array_push($myarray3, $row[$column3]);
 		}
-		return array(array_map('uft8_encode', $myarray), array_map('uft8_encode', $myarray2), array_map('uft8_encode', $myarray3));
+		return array(array_map('utf8_encode', $myarray), array_map('utf8_encode', $myarray2), array_map('utf8_encode', $myarray3));
+	}
+
+	function sqlDataTo4ColumnArray($data, $column, $column2, $column3, $column4) {
+		$myarray = array();
+		$myarray2 = array();
+		$myarray3 = array();
+		$myarray4 = array();
+		while ($row = mysql_fetch_assoc($data)) {
+			array_push($myarray, $row[$column]);
+			array_push($myarray2, $row[$column2]);
+			array_push($myarray3, $row[$column3]);
+			array_push($myarray4, $row[$column4]);
+		}
+		return array(array_map('utf8_encode', $myarray), array_map('utf8_encode', $myarray2), array_map('utf8_encode', $myarray3), array_map('utf8_encode', $myarray4));
 	}
 
 	public function connect() {
@@ -99,6 +113,17 @@ class Database {
 		$result = $this -> executeSQL($sql);
 		$row = mysql_fetch_array($result);
 		return $row['USERID'];
+	}
+
+	public function getUserDetails($userid) {
+		$sql = "SELECT U.USERNAME AS USERNAME, GP.GROUPNAME AS GROUPNAME, PD.PERMNAME AS PERMNAME, PD.ACCESS AS ACCESS
+				FROM USERS U
+				INNER JOIN GROUPPERMISSIONS GP ON GP.GROUPID = U.GROUPID
+				INNER JOIN GROUPS G ON G.GROUPID = GP.GROUPID
+				INNER JOIN PERMISSIONDEFINITION PD ON PD.PERMID = G.PERMID
+				WHERE U.USERID = $userid;";
+		$result = $this -> executeSQL($sql);
+		return $this -> sqlDataTo4ColumnArray($result, 'USERNAME', 'GROUPNAME', 'PERMNAME', 'ACCESS');
 	}
 
 	public function getDocumentID($documentName) {

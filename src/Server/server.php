@@ -66,7 +66,6 @@ function getDocumentSections() {
 	$document = new Document();
 	$data = $document -> getDocumentSections($_GET['docname']);
 	unset($document);
-	//return array_map(utf8_encode, $data);
 	return $data;
 }
 
@@ -74,6 +73,17 @@ function getDocumentSectionCount() {
 	$document = new Document();
 	$data = $document -> getDocumentSectionCount($_GET['docname']);
 	unset($document);
+	return $data;
+}
+
+function displayUserDetails() {
+	$db = new Database();
+	$db -> connect();
+	$username = $_GET['username'];
+	$userid = $db -> getUserID($username);
+	$data = $db -> getUserDetails($userid);
+	$db -> disconnect();
+	unset($db);
 	return $data;
 }
 
@@ -95,5 +105,7 @@ if ($_GET['function'] == 'userPermissionList') {
 	echo json_encode(getDocumentSections());
 } else if ($_GET['function'] == 'getDocumentSectionCount') {
 	echo json_encode(getDocumentSectionCount());
+} else if ($_GET['function'] == 'displayUserDetails') {
+	echo json_encode(displayUserDetails());
 }
 ?>
