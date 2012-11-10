@@ -1,0 +1,183 @@
+LevelAll - Section 0
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<meta name="copyright" content="1996, 2001, 2004  Bradley Kjell">
+<meta name="author" content="Bradley Kjell kjell at ieee dot org ">
+<meta name="keywords" content="assembly language programming, MIPS, SPIM, assembly language tutorial, programmed learning, MIPS32, binary arithmetic, two's complement">
+<meta name="description" content="Interactive first course in assembly language programming using the MIPS32 processor and the SPIM simulator.">
+<meta name="robots" content="index,follow">
+<link rel="stylesheet" type="text/css" href="assemblyStyle.css" />
+
+<title>Programmed Introduction to MIPS Assembly Language</title>
+</head>
+
+<body background="zeroOnes2.gif" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#CC00CC" alink="#FF0000">
+
+
+
+LevelAll - Section 1
+
+<center>
+<img src="imgs/title.gif"/>
+<h4>Bradley Kjell, Central Connecticut State University</h4>
+<h4>Slightly Improved Edition, August 2007</h4>
+</center>
+
+<table style="margin-left:0.0cm" cellpadding="5" width="100%">
+<tr>
+<td valign="top" width="50%">
+<p align="justify"> 
+  <a href="Audio/TOC-01.mp3" target="audioPlayer"  class="audio">T</a>his is a course in 
+  assembly language programming of 
+  the MIPS processor. 
+  It emphasizes the topics needed for study 
+  of computer architecture: 
+  bits, bit patterns, 
+  operations on bit patterns, 
+  and how bit patterns represent
+  instructions and data.
+  This course is equivalent to a semester-long 
+  junior college or university course 
+  (except, perhaps, for the emphasis on bit patterns).
+<p>
+
+<p align="justify">
+  The emphasis of the course is on
+  understanding how computers work.
+  This
+  will provide a basis for further
+  study of computer architecture
+  and computer software.
+  The MIPS processor,
+  the subject of this course,
+  has a well designed architecture
+  and is particularly fruitful to study.
+  However, the goal of the course is not to turn you into
+  a MIPS programmer, but to
+  give you an understanding
+  of all computer systems.
+</p>
+
+<p align="justify">
+  The only equipment you need for this course is a PC.
+  The only software you need is the 
+  SPIM simulator of the MIPS32 processor
+  and a text editor.
+  The simulator is available by free download
+  (see  appendix A).
+  Example programs are presented
+  using an MS Windows
+  operating system.
+  However, you can use any
+  platform that runs SPIM.
+  (There are many).
+</p>
+</td>
+
+<td width="50%" valign="top">
+<p align="justify">
+<a href="Audio/TOC-02.mp3" target="audioPlayer" class="audio">A</a>ssembly Language is normally taken
+the semester after a course in a high level programming
+language (such as Java or C).
+This course assumes that you have this background
+although no specific programming language is required.
+</p>
+
+<p align="justify">
+Read the pages of this course <em>actively</em>.
+Think about and answer the question at
+the bottom of each page.
+(This style of tutorial is called <em>programmed learning</em>.
+It is very effective for technical material).
+Most questions call for
+just a little thought.
+Some call for pencil and paper.
+Keep a pencil and a scrap of paper   next to your keyboard.
+Each chapter is about 15 pages long.
+Spend several minutes per page.
+You can read each chapter in about 30 minutes.
+However, for maximum benefit, you should run some of the 
+example programs, 
+write some programs of your own, 
+and then think about
+your results.
+This may take several hours.
+</p>
+
+<p>
+<span style="color:green">
+Works best with Firefox at 1024 x 768 resolution or better
+</span>
+</p>
+</td>
+</tr>
+</table>
+
+
+
+Level1 - Section 2
+
+<a name="part1"></a>
+
+<h2>Part 1: Prelude to Assembly Language</h2>
+
+
+<p> <big>A</big>ssembly language: what it is, why it is studied, and where it is used. </p>
+
+<ul>
+
+<li> 
+<a href="DocumentView.php?action=edit&docname=Demo_CH1"> 
+Chapter 1</a> 
+ Computer Architecture and Assembly Language.
+  <a href="UnitQuiz/quizCh1.php">Quiz</a>
+</li>
+
+<li> 
+<a href="DocumentView.php?action=edit&docname=Demo_CH2"> 
+Chapter 2</a> 
+ Analog and Binary Signals. 
+  <a href="UnitQuiz/quizCh2.php">Quiz</a>  
+</li>
+</ul>
+
+
+
+Level 2 Section 3
+
+<A name="part2"></a>
+ 
+<h2>Part 2:  Data Representation</h2>
+ 
+
+<p>
+<big>D</big>ata: characters
+and integers.
+The <em>binary addition algorithm</em>.
+</p>
+
+
+<ul>
+<li> 
+<a href="DocumentView.php?action=edit&docname=Demo_CH5"> 
+Chapter 5</a> 
+ Characters. 
+  <a href="UnitQuiz/quizCh5.php">Quiz</a>    
+</li>
+
+<li> 
+<a href="DocumentView.php?action=edit&docname=Demo_CH6"> 
+Chapter 6</a> 
+ Number Representation. 
+  <a href="UnitQuiz/quizCh6.php">Quiz</a>     
+</li>
+</ul>
+
+
+
+Level All Section 4
+
+</body>
+</html>
