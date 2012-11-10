@@ -13,6 +13,7 @@ $permissions = $useraccess -> getPermissions();
 		<script src="js/jquery.js"></script>
 		<script src="js/jquery.validate.js"</script>
 		<script type="teext/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="css/site.css" />
 		<script language="JavaScript">
 			function getUrlVars() {
 				var vars = [], hash;
@@ -34,6 +35,7 @@ $permissions = $useraccess -> getPermissions();
 			
 			function generateSectionIDBox(id, sectionid) {
 				$(".documentSections_div").append("<input type='text' id='Section_" + id + "' name='Section_" + id + "'></input>");
+
 				$('#Section_'+id).val(sectionid);
 				$(".documentSections_div").append("<br/>");
 			}
